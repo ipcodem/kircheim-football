@@ -8,6 +8,8 @@ brauzerot (localStorage) na uredot.
 
 ## Kako da ja staviš na GitHub Pages (besplatno hosting)
 
+## 
+
 1. Napravi nov repozitorium na GitHub (na pr. `kircheim-nogomet`).
 2. Kači gi ovie fajla vo root na repozitoriumot:
    - `index.html`
