@@ -1,0 +1,159 @@
+<!DOCTYPE html>
+<html lang="mk">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+<title>Kircheim Nogomet — Team Picker</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@500;600;700&family=Inter:wght@400;500;600;700&family=JetBrains+Mono:wght@500;700&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="styles.css">
+</head>
+<body>
+
+<div class="login-gate" id="loginGate">
+  <div class="login-card">
+    <select id="langSelectLogin" class="input lang-select">
+      <option value="mk">Македонски</option>
+      <option value="sr">Srpski</option>
+      <option value="hr">Hrvatski</option>
+      <option value="cnr">Crnogorski</option>
+      <option value="ba">Bosanski</option>
+      <option value="de">Deutsch</option>
+    </select>
+    <h1>Kircheim <span>Nogomet</span></h1>
+    <p class="hint" data-i18n="login_subtitle">Vnesi ja lozinkata za timot za da vlezeš.</p>
+    <input id="loginPassInput" type="password" class="input" data-i18n-placeholder="login_pass_placeholder" placeholder="Lozinka…" autocomplete="off" />
+    <button id="loginBtn" class="btn btn-primary btn-block" data-i18n="login_btn">Vlez</button>
+    <p class="hint login-error" id="loginError" hidden data-i18n="login_error">Pogrešna lozinka, probaj povtorno.</p>
+  </div>
+</div>
+
+<div class="pitch-lines" aria-hidden="true"></div>
+
+<div class="app" id="appRoot" hidden>
+
+  <header class="banner">
+    <div class="banner-main">
+      <h1>Kircheim <span>Nogomet</span></h1>
+      <p class="lead" data-i18n="banner_lead">Vnesi igrači, izberi kapiteni i golmani, i izvlечи tri fer timovi za denešniot mač.</p>
+    </div>
+    <div class="banner-side">
+      <select id="langSelectApp" class="input lang-select"></select>
+      <button id="logoutBtn" class="btn btn-text btn-danger" data-i18n="logout_btn">⏻ Odjava</button>
+      <img class="flags" src="assets/flags_tile.png" alt="MK · RS · HR · ME · BA" />
+    </div>
+  </header>
+
+  <nav class="steps" aria-hidden="true">
+    <div class="step-dot active" data-step="1"><span>01</span><span data-i18n="step1">Vnes</span></div>
+    <div class="step-line"></div>
+    <div class="step-dot" data-step="2"><span>02</span><span data-i18n="step2">Uloge</span></div>
+    <div class="step-line"></div>
+    <div class="step-dot" data-step="3"><span>03</span><span data-i18n="step3">Izvlekuvanje</span></div>
+  </nav>
+
+  <main class="board">
+
+    <!-- COLUMN 1 — DATABASE -->
+    <section class="card" id="col-roster">
+      <div class="card-head">
+        <h2><span class="num">01</span> <span data-i18n="col1_title">Baza na igrači</span></h2>
+        <p class="hint" data-i18n="col1_hint">Klikni ime za da go dodadeš vo denešniot sostav. „✕" trajno briše od bazata.</p>
+      </div>
+
+      <input id="rosterSearch" type="text" data-i18n-placeholder="roster_search_placeholder" placeholder="Pretraži ja bazata…" class="input" />
+
+      <div class="roster-list" id="rosterList"></div>
+
+      <div class="roster-add-row">
+        <input id="newRosterName" type="text" data-i18n-placeholder="new_roster_placeholder" placeholder="Novo ime za bazata…" class="input" />
+        <button id="addRosterBtn" class="btn btn-ghost" data-i18n="add_roster_btn">Dodadi</button>
+      </div>
+
+      <details class="bulk-import" open>
+        <summary data-i18n="bulk_summary">Rakopisno / uvezi listа od notepad</summary>
+        <p class="hint" data-i18n="bulk_hint">Edno ime vo sekoj red. Bazata prima maks. 50 igrači.</p>
+        <textarea id="bulkNames" rows="6" data-i18n-placeholder="bulk_textarea_placeholder" placeholder="Igor&#10;Ado&#10;Haris…"></textarea>
+        <div class="bulk-actions">
+          <button id="bulkImportBtn" class="btn btn-primary btn-block" data-i18n="bulk_import_btn">Dodadi ja listata vo bazata</button>
+        </div>
+      </details>
+
+      <p class="hint" id="rosterCountHint">0 / 50</p>
+
+      <div class="file-actions">
+        <button id="exportRosterBtn" class="btn btn-text" data-i18n="export_roster_btn">⭳ Export baza (.txt)</button>
+        <label class="btn btn-text file-label">
+          <span data-i18n="import_roster_btn">⭱ Import baza (.txt)</span>
+          <input id="importRosterInput" type="file" accept=".txt,text/plain" hidden />
+        </label>
+      </div>
+    </section>
+
+    <!-- COLUMN 2 — TODAY'S SQUAD + ROLES -->
+    <section class="card" id="col-roles">
+      <div class="card-head">
+        <h2><span class="num">02</span> <span data-i18n="col2_title">Denešen sostav</span></h2>
+        <p class="hint" id="squadCountHint">0</p>
+        <button id="clearSquadBtn" class="btn btn-text btn-danger" data-i18n="clear_squad_btn">🗑 Isprazni go sostavot</button>
+      </div>
+
+      <div class="squad-list" id="squadList">
+        <p class="empty-msg" data-i18n="squad_empty">Uште nema izbrani igrači. Klikni imiња od bazata levo.</p>
+      </div>
+
+      <div class="role-legend">
+        <span class="tag tag-cap">K</span> <span data-i18n="legend_captain">Kapiten</span>
+        <span class="tag tag-vice">ZK</span> <span data-i18n="legend_vice">Zamenik</span>
+        <span class="tag tag-gk">G</span> <span data-i18n="legend_gk">Golman</span>
+      </div>
+    </section>
+
+    <!-- COLUMN 3 — DRAW -->
+    <section class="card" id="col-draw">
+      <div class="card-head">
+        <h2><span class="num">03</span> <span data-i18n="col3_title">Izvlekuvanje</span></h2>
+        <p class="hint" data-i18n="col3_hint">Slučaen, no fer raspored — po eden kapiten i zamenik vo sekoj tim.</p>
+      </div>
+
+      <div class="draw-actions">
+        <button id="drawTeamsBtn" class="btn btn-primary btn-block" disabled data-i18n="draw_btn">🎲 Podeli timovi</button>
+        <button id="pickFirstBtn" class="btn btn-ghost btn-block" disabled data-i18n="pick_first_btn">⚽ Koj igra prvi</button>
+      </div>
+
+      <div class="teams-grid" id="teamsGrid">
+        <div class="team-col" data-team="0"><h3 data-i18n="team1">Tim 1</h3><ul></ul></div>
+        <div class="team-col" data-team="1"><h3 data-i18n="team2">Tim 2</h3><ul></ul></div>
+        <div class="team-col" data-team="2"><h3 data-i18n="team3">Tim 3</h3><ul></ul></div>
+      </div>
+
+      <div class="match-box" id="matchBox" hidden>
+        <h3 data-i18n="matchbox_title">KOJ IGRA PRVI</h3>
+        <p><strong data-i18n="matchbox_playing">IGRAAT:</strong> <span id="matchPlaying">—</span></p>
+        <p><strong data-i18n="matchbox_waiting">ČEKA:</strong> <span id="matchWaiting">—</span></p>
+      </div>
+
+      <div class="export-actions">
+        <button id="exportCsvBtn" class="btn btn-text" disabled data-i18n="export_csv_btn">⭳ Export CSV</button>
+        <button id="exportPdfBtn" class="btn btn-text" disabled data-i18n="export_pdf_btn">⭳ Export PDF</button>
+      </div>
+    </section>
+
+  </main>
+
+  <footer class="foot">
+    <p data-i18n="footer_text">Sè se čuva lokalno vo ovoj brauzer. Koristi „Export baza" za da napraviš rezervna kopija ili za da ja prenesеš na drug uredaj.</p>
+    <button id="resetAllBtn" class="btn btn-text btn-danger" data-i18n="reset_all_btn">♻ Startuvaj odnovo (izbriši sè)</button>
+  </footer>
+
+</div>
+
+<div class="toast" id="toast"></div>
+
+<script src="https://www.gstatic.com/firebasejs/10.12.2/firebase-app-compat.js"></script>
+<script src="https://www.gstatic.com/firebasejs/10.12.2/firebase-database-compat.js"></script>
+<script src="firebase-config.js"></script>
+<script src="app.js"></script>
+</body>
+</html>
