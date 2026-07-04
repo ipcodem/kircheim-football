@@ -4,19 +4,19 @@
    ============================================================ */
 
 :root {
-  --bg-0: #131A2C;
-  --bg-1: #1D2745;
-  --bg-2: #283257;
-  --bg-3: #354070;
+  --bg-0: #142C22;
+  --bg-1: #1C3B2C;
+  --bg-2: #274A38;
+  --bg-3: #365F49;
 
   --accent-gold: #E8B94A;
   --accent-gold-dim: #7A6329;
-  --accent-teal: #2FBF9F;
+  --accent-teal: #4CC9F0;
   --accent-red: #E1574B;
 
   --text-hi: #F3F5FA;
-  --text-lo: #93A0C0;
-  --text-faint: #5C6889;
+  --text-lo: #AFC7B8;
+  --text-faint: #6C8577;
 
   --radius-lg: 20px;
   --radius-md: 14px;
@@ -41,7 +41,7 @@ html, body {
 body {
   background-image:
     radial-gradient(circle at 15% 0%, rgba(232,185,74,0.07), transparent 45%),
-    radial-gradient(circle at 85% 100%, rgba(47,191,159,0.08), transparent 45%);
+    radial-gradient(circle at 85% 100%, rgba(76,201,240,0.08), transparent 45%);
   background-attachment: fixed;
 }
 
@@ -151,7 +151,7 @@ button, input, textarea { font-family: inherit; }
   align-items: center;
   gap: 8px;
 }
-.step-dot span {
+.step-dot span:first-child {
   display: inline-flex;
   align-items: center;
   justify-content: center;
@@ -160,9 +160,10 @@ button, input, textarea { font-family: inherit; }
   background: var(--bg-2);
   color: var(--text-faint);
   font-size: 10px;
+  flex-shrink: 0;
 }
 .step-dot.active { color: var(--accent-gold); }
-.step-dot.active span { background: var(--accent-gold); color: #17130A; }
+.step-dot.active span:first-child { background: var(--accent-gold); color: #17130A; }
 .step-line {
   flex: 1;
   height: 1px;
@@ -296,7 +297,7 @@ textarea { resize: vertical; font-family: var(--font-mono); font-size: 13px; }
   background: var(--bg-0);
   background-image:
     radial-gradient(circle at 15% 0%, rgba(232,185,74,0.07), transparent 45%),
-    radial-gradient(circle at 85% 100%, rgba(47,191,159,0.08), transparent 45%);
+    radial-gradient(circle at 85% 100%, rgba(76,201,240,0.08), transparent 45%);
   padding: 24px;
 }
 .login-gate[hidden] { display: none; }
@@ -349,7 +350,7 @@ textarea { resize: vertical; font-family: var(--font-mono); font-size: 13px; }
   transition: background 0.12s ease;
 }
 .roster-row:hover { background: var(--bg-3); }
-.roster-row.in-squad { background: rgba(47,191,159,0.12); }
+.roster-row.in-squad { background: rgba(76,201,240,0.12); }
 .roster-row .name { font-size: 14px; }
 .roster-row .row-actions { display: flex; align-items: center; gap: 8px; }
 .roster-row .added-pill {
@@ -444,16 +445,21 @@ details.bulk-import textarea { margin-top: 10px; }
   font-size: 11px;
   font-weight: 700;
   border-radius: 6px;
-  padding: 4px 7px;
+  width: 28px;
+  height: 24px;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
   cursor: pointer;
   user-select: none;
   border: 1px solid rgba(255,255,255,0.12);
   color: var(--text-faint);
   background: transparent;
   transition: all 0.12s ease;
+  flex-shrink: 0;
 }
 .tag-cap.active { background: var(--accent-gold); color: #1B1408; border-color: var(--accent-gold); }
-.tag-vice.active { background: var(--accent-teal); color: #06231C; border-color: var(--accent-teal); }
+.tag-vice.active { background: var(--accent-teal); color: #062836; border-color: var(--accent-teal); }
 .tag-gk.active { background: var(--accent-red); color: #2B0A07; border-color: var(--accent-red); }
 
 .role-legend {
@@ -509,11 +515,16 @@ details.bulk-import textarea { margin-top: 10px; }
 .team-col li .mini-tag {
   font-family: var(--font-mono);
   font-size: 9px;
-  padding: 1px 5px;
+  width: 22px;
+  height: 18px;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
   border-radius: 5px;
+  flex-shrink: 0;
 }
 .team-col li .mini-tag.k { background: var(--accent-gold); color: #1B1408; }
-.team-col li .mini-tag.zk { background: var(--accent-teal); color: #06231C; }
+.team-col li .mini-tag.zk { background: var(--accent-teal); color: #062836; }
 .team-col li .mini-tag.g { background: var(--accent-red); color: #2B0A07; }
 
 @keyframes dealIn {
@@ -573,6 +584,42 @@ details.bulk-import textarea { margin-top: 10px; }
   opacity: 1;
   transform: translateX(-50%) translateY(0);
 }
+
+/* ---------- admin password modal ---------- */
+
+.admin-modal-overlay {
+  position: fixed;
+  inset: 0;
+  background: rgba(6,14,10,0.6);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  z-index: 100;
+  padding: 16px;
+}
+.admin-modal {
+  background: var(--bg-1);
+  border: 1px solid rgba(255,255,255,0.1);
+  border-radius: var(--radius-lg);
+  padding: 26px 24px;
+  max-width: 340px;
+  width: 100%;
+  text-align: center;
+  box-shadow: 0 20px 60px rgba(0,0,0,0.45);
+}
+.admin-modal-icon { font-size: 26px; margin: 0 0 8px; }
+.admin-modal-msg {
+  color: var(--text-hi);
+  font-size: 14.5px;
+  line-height: 1.5;
+  margin: 0 0 16px;
+}
+.admin-modal .input { margin-bottom: 16px; }
+.admin-modal-actions {
+  display: flex;
+  gap: 10px;
+}
+.admin-modal-actions .btn { flex: 1; }
 
 /* ---------- responsive ---------- */
 

@@ -121,7 +121,7 @@ const I18N = {
 
   col3_title: { mk: "Izvlekuvanje", sr: "Izvlačenje", hr: "Izvlačenje", ba: "Izvlačenje", cnr: "Izvlačenje", de: "Auslosung" },
   col3_hint: {
-    mk: "Slučaen, no fer raspored — po eden kapiten i zamenik vo sekoj tim.",
+    mk: "Slučaen raspored — po eden kapiten i zamenik vo sekoj tim, i po eden golman.",
     sr: "Slučajan, ali fer raspored — po jedan kapiten i zamenik u svakom timu.",
     hr: "Slučajan, ali fer raspored — po jedan kapetan i zamjenik u svakoj momčadi.", ba: "Slučajan, ali fer raspored — po jedan kapetan i zamjenik u svakoj momčadi.",
     cnr: "Slučajan, ali fer raspored — po jedan kapiten i zamjenik u svakom timu.",
@@ -201,6 +201,16 @@ const I18N = {
     cnr: "Trajno obriši iz baze (admin lozinka)",
     de: "Dauerhaft löschen (Admin-Passwort)",
   },
+  admin_pass_placeholder: {
+    mk: "Admin lozinka…", sr: "Admin lozinka…", hr: "Admin lozinka…", ba: "Admin lozinka…", cnr: "Admin lozinka…", de: "Admin-Passwort…",
+  },
+  admin_modal_cancel: {
+    mk: "Otkaži", sr: "Otkaži", hr: "Otkaži", ba: "Otkaži", cnr: "Otkaži", de: "Abbrechen",
+  },
+  admin_modal_confirm: {
+    mk: "Potvrdi", sr: "Potvrdi", hr: "Potvrdi", ba: "Potvrdi", cnr: "Potvrdi", de: "Bestätigen",
+  },
+
   delete_confirm: {
     mk: 'Vnesi admin lozinka za trajno da se izbriše „{name}" od bazata:',
     sr: 'Unesi admin lozinku da trajno obrišeš „{name}" iz baze:',
@@ -904,8 +914,46 @@ function toggleInSquad(name) {
   renderSquad();
 }
 
-function deleteFromRoster(name) {
-  const pass = prompt(t("delete_confirm", { name }));
+// ---------- in-page admin password modal (zameна za native prompt()) ----------
+
+function askAdminPassword(message) {
+  return new Promise((resolve) => {
+    const overlay = document.getElementById("adminModalOverlay");
+    const msgEl = document.getElementById("adminModalMsg");
+    const input = document.getElementById("adminModalInput");
+    const confirmBtn = document.getElementById("adminModalConfirm");
+    const cancelBtn = document.getElementById("adminModalCancel");
+
+    msgEl.textContent = message;
+    input.value = "";
+    overlay.hidden = false;
+    setTimeout(() => input.focus(), 30);
+
+    function cleanup(result) {
+      overlay.hidden = true;
+      confirmBtn.removeEventListener("click", onConfirm);
+      cancelBtn.removeEventListener("click", onCancel);
+      input.removeEventListener("keydown", onKeydown);
+      overlay.removeEventListener("click", onOverlayClick);
+      resolve(result);
+    }
+    function onConfirm() { cleanup(input.value); }
+    function onCancel() { cleanup(null); }
+    function onKeydown(e) {
+      if (e.key === "Enter") onConfirm();
+      if (e.key === "Escape") onCancel();
+    }
+    function onOverlayClick(e) { if (e.target === overlay) onCancel(); }
+
+    confirmBtn.addEventListener("click", onConfirm);
+    cancelBtn.addEventListener("click", onCancel);
+    input.addEventListener("keydown", onKeydown);
+    overlay.addEventListener("click", onOverlayClick);
+  });
+}
+
+async function deleteFromRoster(name) {
+  const pass = await askAdminPassword(t("delete_confirm", { name }));
   if (pass === null) return; // otkažano
   if (pass !== ADMIN_PASSWORD) {
     toast(t("delete_wrong_pass"));
@@ -1097,7 +1145,7 @@ function updateDrawAvailability() {
 async function generateTeams() {
   const lastWeek = await getLastDrawWeek();
   if (lastWeek === currentWeekKey()) {
-    const pass = prompt(t("draw_locked_prompt"));
+    const pass = await askAdminPassword(t("draw_locked_prompt"));
     if (pass === null) return; // otkažano
     if (pass !== ADMIN_PASSWORD) {
       toast(t("draw_wrong_pass"));
@@ -1360,12 +1408,16 @@ function exportPdf() {
         font-size: 9.5px;
         font-weight: 700;
         border-radius: 5px;
-        padding: 2px 5px;
+        width: 20px;
+        height: 16px;
+        display: inline-flex;
+        align-items: center;
+        justify-content: center;
         color: #fff;
         flex-shrink: 0;
       }
       .role-k { background: #C99A2E; }
-      .role-zk { background: #1E9C82; }
+      .role-zk { background: #1E7FA3; }
       .role-g { background: #C7473C; }
 
       .match-card {
@@ -1440,12 +1492,12 @@ function exportPdf() {
   setTimeout(() => win.print(), 400);
 }
 
-function clearSquad() {
+async function clearSquad() {
   if (squad.length === 0) {
     toast(t("clear_squad_empty_toast"));
     return;
   }
-  const pass = prompt(t("clear_squad_confirm"));
+  const pass = await askAdminPassword(t("clear_squad_confirm"));
   if (pass === null) return; // otkažano
   if (pass !== ADMIN_PASSWORD) {
     toast(t("clear_squad_wrong_pass"));
@@ -1468,7 +1520,7 @@ function clearSquad() {
 // ---------- full reset ----------
 
 async function resetAll() {
-  const pass = prompt(t("reset_prompt"));
+  const pass = await askAdminPassword(t("reset_prompt"));
   if (pass === null) return; // otkažano
   if (pass !== ADMIN_PASSWORD) {
     toast(t("reset_wrong_pass"));
