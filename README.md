@@ -94,6 +94,10 @@ sto rabotеše i pred izmenata.
          ".read": true,
          ".write": true
        },
+       "kircheimPickFirstLock": {
+         ".read": true,
+         ".write": true
+       },
        "kircheimRoster": {
          ".read": true,
          ".write": true
@@ -106,11 +110,32 @@ sto rabotеše i pred izmenata.
          ".read": true,
          ".write": true
        },
+       "kircheimAuth": {
+         ".read": true,
+         ".write": false
+       },
        ".read": false,
        ".write": false
      }
    }
    ```
+
+   Забелешка за `kircheimAuth`: `.write` е нарочно `false`. Апликацијата
+   само ги *чита* хешевите на лозинките оттаму — ти ги менуваш рачно
+   преку Firebase Console (Realtime Database → Data → `kircheimAuth`),
+   не преку самата апликација. Ова спречува било кој технички поткован
+   корисник да ги промени лозинките преку browser конзолата.
+
+7. **Menuvanje na lozinkite bez editiranje na app.js:** otvori го
+   `hash-generator.html` (lokalno, vo bilo koj browser — ne bara internet
+   ni Firebase), vnesi ja novata lozinka, kopiraj go generiraniot heš, i
+   zalepi go vo Firebase Console → Realtime Database, pod:
+   - `kircheimAuth/sitePasswordHash` — lozinkata za vlez vo aplikacijata
+   - `kircheimAuth/adminPasswordHash` — admin lozinkata
+
+   Ako `kircheimAuth` uste nema vrednosti (prv pat), aplikacijata
+   automatski gi koristi standardnite lozinki `kircheim2026` i
+   `admin2026` dodeka ne zapišeš svoi heševi.
 
 **Vazhno za bezbednost:** ova e statička stranica bez server, pa `apiKey`-
 ot vo `firebase-config.js` e vidliv za sekoj koj go otvora izvorniot kod

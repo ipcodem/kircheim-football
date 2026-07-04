@@ -11,12 +11,35 @@ const SESSION_MAX_AGE_MS = 60 * 60 * 1000; // 1 čas — posle ovoj period, bara
 const STORAGE_LANG = "kircheim.lang.v1";
 const MAX_ROSTER = 50;
 
-// Zaedничka lozinka za vlez na site. Promeni ja ovaa vrednost ako sakaš druga.
-const SITE_PASSWORD = "kircheim2026";
+// Lozinkite sega se čuvaat kako SHA-256 heš (ne kako čist tekst), i po
+// možnost se prezemaat od Firebase (patka "kircheimAuth"), taka što
+// menuvanjeto na lozinkata ne bara editiranje/redeploy na ovoj fajl —
+// samo se menuva vrednosta vo Firebase Console.
+//
+// Ovie konstanti se SAMO rezerven (fallback) heš, koj se koristi ako
+// Firebase ne e dostapen (na pr. offline ili ne e konfiguriran).
+// Toa se heš od "kircheim2026" i "admin2026" — istite standardni
+// lozinki kako i pred izmenata.
+const SITE_PASSWORD_HASH_FALLBACK =
+  "94a70ffac10da190f7cbcc5ff8ae4f9f0f9400099c01025b5b8f2f4af25a317d";
+const ADMIN_PASSWORD_HASH_FALLBACK =
+  "6051fc84a7a0d74c225fb18a496b09952da5642e60723ecae543298edd7d82d6";
 
-// Admin lozinka koja dozvoluva povtorno izvlekuvanje ist den i celosen reset.
-// Promeni ja ovaa vrednost ako sakaš druga lozinka.
-const ADMIN_PASSWORD = "admin2026";
+// Ovie promenlivi go čuvaat AKTIVNIOT heš — ili od Firebase (ako e
+// dostapen i ima vrednost tamu), ili rezervniot heš od gore.
+let sitePasswordHash = SITE_PASSWORD_HASH_FALLBACK;
+let adminPasswordHash = ADMIN_PASSWORD_HASH_FALLBACK;
+
+/** Presmetuva SHA-256 heš (kako hex string) od daden tekst, koristejќi ja
+ *  vgradenata Web Crypto API (dostapna vo sekoj moderen browser, ne bara
+ *  nikakva nadvorešna biblioteka). */
+async function sha256Hex(text) {
+  const bytes = new TextEncoder().encode(text);
+  const digest = await crypto.subtle.digest("SHA-256", bytes);
+  return Array.from(new Uint8Array(digest))
+    .map((b) => b.toString(16).padStart(2, "0"))
+    .join("");
+}
 
 // =========================================================
 // i18n — Makedonski / Srpski / Hrvatski / Crnogorski / Deutsch
@@ -480,12 +503,13 @@ function logout() {
   document.getElementById("loginGate").hidden = false;
 }
 
-function tryLogin() {
+async function tryLogin() {
   const input = document.getElementById("loginPassInput");
   const error = document.getElementById("loginError");
   const pass = input.value;
 
-  if (pass === SITE_PASSWORD) {
+  const enteredHash = await sha256Hex(pass);
+  if (enteredHash === sitePasswordHash) {
     try {
       localStorage.setItem(STORAGE_AUTH, String(Date.now()));
     } catch {
@@ -536,6 +560,7 @@ let fbPickFirstLockRef = null;
 let fbRosterRef = null;
 let fbSquadRef = null;
 let fbDrawResultRef = null;
+let fbAuthRef = null;
 try {
   if (
     typeof FIREBASE_CONFIG !== "undefined" &&
@@ -550,6 +575,7 @@ try {
     fbRosterRef = firebase.database().ref("kircheimRoster");
     fbSquadRef = firebase.database().ref("kircheimSquad");
     fbDrawResultRef = firebase.database().ref("kircheimDrawResult");
+    fbAuthRef = firebase.database().ref("kircheimAuth");
   } else {
     console.warn(
       "Firebase ne e konfiguriran (vidi firebase-config.js) — nedelnata brava raboti samo lokalno vo ovoj browser."
@@ -562,7 +588,34 @@ try {
   fbRosterRef = null;
   fbSquadRef = null;
   fbDrawResultRef = null;
+  fbAuthRef = null;
 }
+
+/** Gi sledi lozinkite (heš) od Firebase vo realno vreme. Ako patkata
+ *  "kircheimAuth" nema hešови (uste nikoj ne gi zapišal), se koristat
+ *  rezervnite (fallback) heševi od gore, taka što aplikacijata sekogaš
+ *  raboti, dури i pred prvо zapišuvanje vo Firebase. */
+function initAuthSync() {
+  if (!fbAuthRef) return;
+  fbAuthRef.on(
+    "value",
+    (snap) => {
+      const val = snap.exists() ? snap.val() : null;
+      sitePasswordHash =
+        val && typeof val.sitePasswordHash === "string"
+          ? val.sitePasswordHash
+          : SITE_PASSWORD_HASH_FALLBACK;
+      adminPasswordHash =
+        val && typeof val.adminPasswordHash === "string"
+          ? val.adminPasswordHash
+          : ADMIN_PASSWORD_HASH_FALLBACK;
+    },
+    (err) => {
+      console.error("Ne mozhe da se sledat lozinkite od Firebase, koristam rezervni:", err);
+    }
+  );
+}
+initAuthSync();
 
 /** Ja postavuva vidlivata poraka vo footer-ot za sostojbata na spodelenata
  *  baza, taka što problem so Firebase (na pr. Rules) e vidliv veднаš na
@@ -1051,8 +1104,7 @@ function askAdminPassword(message) {
 async function deleteFromRoster(name) {
   const pass = await askAdminPassword(t("delete_confirm", { name }));
   if (pass === null) return; // otkažano
-  if (pass !== ADMIN_PASSWORD) {
-    toast(t("delete_wrong_pass"));
+  if ((await sha256Hex(pass)) !== adminPasswordHash) {
     return;
   }
   roster = roster.filter((n) => n.toLowerCase() !== name.toLowerCase());
@@ -1243,7 +1295,7 @@ async function generateTeams() {
   if (lastWeek === currentWeekKey()) {
     const pass = await askAdminPassword(t("draw_locked_prompt"));
     if (pass === null) return; // otkažano
-    if (pass !== ADMIN_PASSWORD) {
+    if ((await sha256Hex(pass)) !== adminPasswordHash) {
       toast(t("draw_wrong_pass"));
       return;
     }
@@ -1324,7 +1376,7 @@ async function pickWhoPlaysFirst() {
   if (lastWeek === currentWeekKey()) {
     const pass = await askAdminPassword(t("pickfirst_locked_prompt"));
     if (pass === null) return; // otkažano
-    if (pass !== ADMIN_PASSWORD) {
+    if ((await sha256Hex(pass)) !== adminPasswordHash) {
       toast(t("pickfirst_wrong_pass"));
       return;
     }
@@ -1608,7 +1660,7 @@ async function clearSquad() {
   }
   const pass = await askAdminPassword(t("clear_squad_confirm"));
   if (pass === null) return; // otkažano
-  if (pass !== ADMIN_PASSWORD) {
+  if ((await sha256Hex(pass)) !== adminPasswordHash) {
     toast(t("clear_squad_wrong_pass"));
     return;
   }
@@ -1631,7 +1683,7 @@ async function clearSquad() {
 async function resetAll() {
   const pass = await askAdminPassword(t("reset_prompt"));
   if (pass === null) return; // otkažano
-  if (pass !== ADMIN_PASSWORD) {
+  if ((await sha256Hex(pass)) !== adminPasswordHash) {
     toast(t("reset_wrong_pass"));
     return;
   }
