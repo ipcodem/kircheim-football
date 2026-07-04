@@ -148,6 +148,27 @@ const I18N = {
     cnr: 'Sve se čuva lokalno u ovom pregledaču. Koristi „Izvezi bazu" da napraviš rezervnu kopiju ili je prebaciš na drugi uređaj.',
     de: 'Alles wird lokal in diesem Browser gespeichert. Nutze „Datenbank exportieren" für ein Backup oder um es auf ein anderes Gerät zu übertragen.',
   },
+  sync_status_shared: {
+    mk: "🟢 Baza na igrači: spodelena preku Firebase (site korisnici ja gledaat).",
+    sr: "🟢 Baza igrača: deljena preko Firebase-a (svi korisnici je vide).",
+    hr: "🟢 Baza igrača: dijeljena preko Firebasea (svi korisnici je vide).", ba: "🟢 Baza igrača: dijeljena preko Firebasea (svi korisnici je vide).",
+    cnr: "🟢 Baza igrača: deljena preko Firebase-a (svi korisnici je vide).",
+    de: "🟢 Spielerdatenbank: über Firebase geteilt (für alle sichtbar).",
+  },
+  sync_status_local: {
+    mk: "⚪ Baza na igrači: samo lokalno vo ovoj brauzer (Firebase ne e konfiguriran).",
+    sr: "⚪ Baza igrača: samo lokalno u ovom pregledaču (Firebase nije podešen).",
+    hr: "⚪ Baza igrača: samo lokalno u ovom pregledniku (Firebase nije podešen).", ba: "⚪ Baza igrača: samo lokalno u ovom pregledniku (Firebase nije podešen).",
+    cnr: "⚪ Baza igrača: samo lokalno u ovom pregledaču (Firebase nije podešen).",
+    de: "⚪ Spielerdatenbank: nur lokal in diesem Browser (Firebase nicht konfiguriert).",
+  },
+  sync_status_error: {
+    mk: "🔴 Baza na igrači: Firebase e konfiguriran, no pristapot e odbien — provei gi Rules vo Firebase Console (vidi README).",
+    sr: "🔴 Baza igrača: Firebase je podešen, ali pristup je odbijen — proveri Rules u Firebase Console-i (vidi README).",
+    hr: "🔴 Baza igrača: Firebase je podešen, ali pristup je odbijen — provjeri Rules u Firebase Console-i (vidi README).", ba: "🔴 Baza igrača: Firebase je podešen, ali pristup je odbijen — provjeri Rules u Firebase Console-i (vidi README).",
+    cnr: "🔴 Baza igrača: Firebase je podešen, ali pristup je odbijen — proveri Rules u Firebase Console-i (vidi README).",
+    de: "🔴 Spielerdatenbank: Firebase konfiguriert, aber Zugriff verweigert — prüfe die Rules in der Firebase Console (siehe README).",
+  },
   reset_all_btn: {
     mk: "♻ Startuvaj odnovo (izbriši sè)",
     sr: "♻ Počni ispočetka (izbriši sve)",
@@ -373,6 +394,7 @@ function setLanguage(lang) {
   applyStaticI18n();
   renderRoster();
   renderSquad();
+  updateSyncStatus(lastSyncState);
   if (lastTeams) renderTeams(lastTeams);
 }
 
@@ -460,6 +482,8 @@ document.getElementById("loginPassInput").addEventListener("keydown", (e) => {
 
 let fbDrawLockRef = null;
 let fbRosterRef = null;
+let fbSquadRef = null;
+let fbDrawResultRef = null;
 try {
   if (
     typeof FIREBASE_CONFIG !== "undefined" &&
@@ -471,6 +495,8 @@ try {
     firebase.initializeApp(FIREBASE_CONFIG);
     fbDrawLockRef = firebase.database().ref("kircheimDrawLock");
     fbRosterRef = firebase.database().ref("kircheimRoster");
+    fbSquadRef = firebase.database().ref("kircheimSquad");
+    fbDrawResultRef = firebase.database().ref("kircheimDrawResult");
   } else {
     console.warn(
       "Firebase ne e konfiguriran (vidi firebase-config.js) — nedelnata brava raboti samo lokalno vo ovoj browser."
@@ -480,7 +506,31 @@ try {
   console.error("Firebase init ne uspea, se koristi lokalna brava:", err);
   fbDrawLockRef = null;
   fbRosterRef = null;
+  fbSquadRef = null;
+  fbDrawResultRef = null;
 }
+
+/** Ja postavuva vidlivata poraka vo footer-ot za sostojbata na spodelenata
+ *  baza, taka što problem so Firebase (na pr. Rules) e vidliv veднаš na
+ *  stranicata, bez da треба da se otvora konzolata za developeri. */
+let lastSyncState = "local";
+function updateSyncStatus(state) {
+  lastSyncState = state;
+  const el = document.getElementById("syncStatus");
+  if (!el) return;
+  el.className = "hint";
+  if (state === "shared") {
+    el.textContent = t("sync_status_shared");
+    el.classList.add("sync-ok");
+  } else if (state === "error") {
+    el.textContent = t("sync_status_error");
+    el.classList.add("sync-err");
+  } else {
+    el.textContent = t("sync_status_local");
+  }
+}
+
+updateSyncStatus(fbRosterRef ? "checking" : "local");
 
 /** Ponedelnik (kako početok na nedelata) za dadeниот datum, format YYYY-MM-DD. */
 function weekKeyFor(date) {
@@ -584,6 +634,8 @@ function initRosterSync() {
   fbRosterRef.on(
     "value",
     (snap) => {
+      updateSyncStatus("shared");
+
       const exists = snap.exists();
       const val = exists ? snap.val() : null;
 
@@ -593,6 +645,7 @@ function initRosterSync() {
         if (roster.length > 0) {
           fbRosterRef.set(roster).catch((err) => {
             console.error("Ne mozhe da se prenese lokalnata baza na Firebase:", err);
+            updateSyncStatus("error");
           });
         }
         return;
@@ -606,6 +659,7 @@ function initRosterSync() {
     },
     (err) => {
       console.error("Ne mozhe da se sledi spodelenata baza, koristam lokalna:", err);
+      updateSyncStatus("error");
     }
   );
 }
@@ -621,8 +675,120 @@ function loadSession() {
   }
 }
 
+function saveSessionLocalOnly() {
+  try {
+    localStorage.setItem(STORAGE_SESSION, JSON.stringify(squad));
+  } catch {
+    /* ignore */
+  }
+}
+
 function saveSession() {
-  localStorage.setItem(STORAGE_SESSION, JSON.stringify(squad));
+  saveSessionLocalOnly();
+  if (fbSquadRef) {
+    fbSquadRef.set(squad).catch((err) => {
+      console.error("Ne mozhe da se zapiše spodeleniot sostav na Firebase:", err);
+    });
+  }
+}
+
+/** Sledi go dnešniot sostav (koj e izbran, kapiten/zamenik/golman) vo
+ *  realno vreme, taka što site korisnici go gledaat istiot sostav. */
+function initSquadSync() {
+  if (!fbSquadRef) return;
+
+  fbSquadRef.on(
+    "value",
+    (snap) => {
+      const exists = snap.exists();
+      const val = exists ? snap.val() : null;
+
+      if (!exists) {
+        if (squad.length > 0) {
+          fbSquadRef.set(squad).catch((err) => {
+            console.error("Ne mozhe da se prenese lokalniot sostav na Firebase:", err);
+          });
+        }
+        return;
+      }
+
+      const remoteSquad = Array.isArray(val) ? val : Object.values(val || {});
+      squad = remoteSquad.filter((p) => p && typeof p.name === "string");
+      saveSessionLocalOnly();
+      renderSquad();
+    },
+    (err) => {
+      console.error("Ne mozhe da se sledi spodeleniot sostav, koristam lokalen:", err);
+    }
+  );
+}
+
+/** Go čuva rezultatot od izvlekuvanjeto (timovite i koj igra prvi) — samo
+ *  lokalno, i ako e moжno, i na Firebase, za da go gledaat SITE korisnici
+ *  koi timovi se izvlečeni za ovaa nedela. */
+function saveDrawResult() {
+  if (fbDrawResultRef) {
+    fbDrawResultRef.set({ teams: lastTeams, match: lastMatch }).catch((err) => {
+      console.error("Ne mozhe da se zapiše spodeleniot rezultat na izvlekuvanjeto:", err);
+    });
+  }
+}
+
+function clearDrawResult() {
+  if (fbDrawResultRef) {
+    fbDrawResultRef.remove().catch((err) => {
+      console.error("Ne mozhe da se izbriše spodeleniot rezultat na izvlekuvanjeto:", err);
+    });
+  }
+}
+
+/** Sledi go rezultatot od izvlekuvanjeto vo realno vreme, taka što site
+ *  korisnici gi gledaat istite timovi za ovaa nedela, i koj igra prvi. */
+function initDrawResultSync() {
+  if (!fbDrawResultRef) return;
+
+  fbDrawResultRef.on(
+    "value",
+    (snap) => {
+      const exists = snap.exists();
+      const val = exists ? snap.val() : null;
+
+      if (!exists) {
+        lastTeams = null;
+        lastMatch = null;
+        document.getElementById("teamsGrid").querySelectorAll("ul").forEach((ul) => (ul.innerHTML = ""));
+        document.getElementById("matchBox").hidden = true;
+        document.getElementById("pickFirstBtn").disabled = true;
+        document.getElementById("exportCsvBtn").disabled = true;
+        document.getElementById("exportPdfBtn").disabled = true;
+        return;
+      }
+
+      lastTeams = Array.isArray(val.teams) ? val.teams : null;
+      lastMatch = val.match || null;
+
+      if (lastTeams) {
+        renderTeams(lastTeams);
+        document.getElementById("pickFirstBtn").disabled = false;
+        document.getElementById("exportCsvBtn").disabled = false;
+        document.getElementById("exportPdfBtn").disabled = false;
+      }
+
+      const box = document.getElementById("matchBox");
+      if (lastMatch && lastTeams) {
+        box.hidden = false;
+        const { a, b, w } = lastMatch;
+        document.getElementById("matchPlaying").textContent =
+          `${teamLeaderLabel(lastTeams[a], a)}  vs  ${teamLeaderLabel(lastTeams[b], b)}`;
+        document.getElementById("matchWaiting").textContent = teamLeaderLabel(lastTeams[w], w);
+      } else {
+        box.hidden = true;
+      }
+    },
+    (err) => {
+      console.error("Ne mozhe da se sledi spodeleniot rezultat na izvlekuvanjeto:", err);
+    }
+  );
 }
 
 // ---------- helpers ----------
@@ -952,6 +1118,7 @@ async function generateTeams() {
   lastTeams = teams;
   lastMatch = null;
   await setLastDrawWeek();
+  saveDrawResult();
   renderTeams(teams);
 
   document.getElementById("pickFirstBtn").disabled = false;
@@ -992,6 +1159,7 @@ function pickWhoPlaysFirst() {
   const pairs = [[0, 1, 2], [0, 2, 1], [1, 2, 0]]; // [playerA, playerB, waiting]
   const [a, b, w] = pairs[Math.floor(Math.random() * pairs.length)];
   lastMatch = { a, b, w };
+  saveDrawResult();
 
   const box = document.getElementById("matchBox");
   box.hidden = false;
@@ -1095,6 +1263,7 @@ function clearSquad() {
   lastTeams = null;
   lastMatch = null;
   saveSession();
+  clearDrawResult();
   renderSquad();
   document.getElementById("teamsGrid").querySelectorAll("ul").forEach((ul) => (ul.innerHTML = ""));
   document.getElementById("matchBox").hidden = true;
@@ -1143,6 +1312,22 @@ async function resetAll() {
     }
   }
 
+  if (fbSquadRef) {
+    try {
+      await fbSquadRef.remove();
+    } catch (err) {
+      console.error("Ne mozhe da se izbriše spodeleniot sostav:", err);
+    }
+  }
+
+  if (fbDrawResultRef) {
+    try {
+      await fbDrawResultRef.remove();
+    } catch (err) {
+      console.error("Ne mozhe da se izbriše spodeleniot rezultat na izvlekuvanjeto:", err);
+    }
+  }
+
   renderRoster();
   renderSquad();
   document.getElementById("teamsGrid").querySelectorAll("ul").forEach((ul) => (ul.innerHTML = ""));
@@ -1180,3 +1365,5 @@ document.getElementById("exportPdfBtn").addEventListener("click", exportPdf);
 renderRoster();
 renderSquad();
 initRosterSync();
+initSquadSync();
+initDrawResultSync();

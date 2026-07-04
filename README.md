@@ -33,8 +33,11 @@ fajlovi.
   ima svoja odvoena baza, samo vo negoviot browser (localStorage) — vo
   toj slučaj koristi "Export baza (.txt)" na eden uredaj i "Import baza
   (.txt)" na drugiot za da ja preneseš listata.
-- **Denešen sostav i uloge** — se čuvaat lokalno vo browserot, za da ne se
-  izgubat ako go zatvoriš slučajno (ne se spodeleni preku Firebase).
+- **Denešen sostav, uloge i izvlečeni timovi** — ako Firebase e
+  konfiguriran, i ova e SPODELENO za SITE korisnici, vo realno vreme:
+  koj e izbran vo sostavot, koj e kapiten/zamenik/golman, i koi timovi se
+  izvlečeni za ovaa nedela — site go gledaat istoto. Ako Firebase NE e
+  konfiguriran, ova se čuva samo lokalno vo browserot.
 - **Export CSV/PDF na timovite** — sluzhi za da im ja prateš listata na
   igrachite (na pr. preku WhatsApp) po izvlekuvanjeto.
 
@@ -95,6 +98,14 @@ sto rabotеše i pred izmenata.
          ".read": true,
          ".write": true
        },
+       "kircheimSquad": {
+         ".read": true,
+         ".write": true
+       },
+       "kircheimDrawResult": {
+         ".read": true,
+         ".write": true
+       },
        ".read": false,
        ".write": false
      }
@@ -107,9 +118,9 @@ na stranicata (kako i admin lozinkata vo `app.js`). Toa e ista razina na
 "zaštita" kako i ostanatiot del od aplikacijata — dobra za sprečuvanje
 slučajno/nenamerno menuvanje megu drugarite od timot, no ne e vistinska
 sigurnosna barierа protiv nekoj koj namerno saka da ja zaobiколи. Правилата
-odgore go ograničuvaat pristapot samo do `kircheimDrawLock` i
-`kircheimRoster` delovite od bazata (ne dozvoluvaat čitanje/pišuvanje na
-ostanatiot del).
+odgore go ograničuvaat pristapot samo do `kircheimDrawLock`,
+`kircheimRoster`, `kircheimSquad` i `kircheimDrawResult` delovite od
+bazata (ne dozvoluvaat čitanje/pišuvanje na ostanatiot del).
 
 Ako ne saka da se zamaraš so Firebase, ostavi go `firebase-config.js`
 kako sto e (so `TVOJ_...` placeholder-i) — aplikacijata ќе rabotи
