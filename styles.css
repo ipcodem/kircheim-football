@@ -580,6 +580,45 @@ details.bulk-import textarea { margin-top: 10px; }
   .flags { height: 36px; }
 }
 
+@media (max-width: 640px) {
+  .app { padding: 14px 12px 40px; }
+
+  .banner { padding: 18px 16px; gap: 14px; }
+  .banner-side { flex-wrap: wrap; width: 100%; }
+  .banner-side .lang-select { flex: 1; min-width: 0; }
+  .flags { height: 30px; }
+
+  .steps { flex-wrap: wrap; gap: 6px; font-size: 10.5px; }
+  .step-line { max-width: 32px; }
+
+  .card { padding: 16px; border-radius: var(--radius-md); }
+
+  .teams-grid { grid-template-columns: 1fr; gap: 8px; }
+  .team-col { min-height: unset; }
+
+  .squad-row {
+    display: flex;
+    flex-wrap: wrap;
+    align-items: center;
+    row-gap: 6px;
+  }
+  .squad-row .name { width: 100%; }
+  .squad-row .tag,
+  .squad-row .remove-x { flex: none; }
+
+  .file-actions, .export-actions { flex-direction: column; }
+  .file-actions .btn, .export-actions .btn { flex: none; width: 100%; }
+
+  .roster-add-row { flex-direction: column; }
+
+  .btn { font-size: 13.5px; padding: 10px 14px; }
+
+  .login-card { padding: 26px 20px; }
+
+  /* sprechuvaj iOS da zumira avtomatski koga ke klikneš vo input polinjata */
+  .input, textarea { font-size: 16px; }
+}
+
 @media (prefers-reduced-motion: reduce) {
   .team-col li { animation: none; opacity: 1; transform: none; }
   .btn { transition: none; }

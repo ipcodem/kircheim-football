@@ -10,7 +10,7 @@
 // "Sподelena nedelna brava (Firebase)".
 // =========================================================
 
-const firebaseConfig = {
+const FIREBASE_CONFIG = {
     apiKey: "AIzaSyCFtnDTpYmAvxaYbAU9p0ISHc0hf4qOTDI",
     authDomain: "kircheim-football.firebaseapp.com",
     databaseURL: "https://kircheim-football-default-rtdb.europe-west1.firebasedatabase.app",

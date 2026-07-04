@@ -921,6 +921,16 @@ function renderTeams(teams) {
   });
 }
 
+/** Vraќa go imeto na kapitenot na timot (ili zamenik ako nema kapiten,
+ *  ili "Tim N" ako nitu eden ne e izbran). */
+function teamLeaderLabel(team, teamIndex) {
+  const captain = team.find((p) => p.role === "k");
+  if (captain) return captain.name;
+  const vice = team.find((p) => p.role === "zk");
+  if (vice) return vice.name;
+  return `${t("team_word")} ${teamIndex + 1}`;
+}
+
 function pickWhoPlaysFirst() {
   if (!lastTeams) return;
   const pairs = [[0, 1, 2], [0, 2, 1], [1, 2, 0]]; // [playerA, playerB, waiting]
@@ -929,8 +939,11 @@ function pickWhoPlaysFirst() {
 
   const box = document.getElementById("matchBox");
   box.hidden = false;
-  document.getElementById("matchPlaying").textContent = `${t("team_word")} ${a + 1}  vs  ${t("team_word")} ${b + 1}`;
-  document.getElementById("matchWaiting").textContent = `${t("team_word")} ${w + 1}`;
+  const nameA = teamLeaderLabel(lastTeams[a], a);
+  const nameB = teamLeaderLabel(lastTeams[b], b);
+  const nameW = teamLeaderLabel(lastTeams[w], w);
+  document.getElementById("matchPlaying").textContent = `${nameA}  vs  ${nameB}`;
+  document.getElementById("matchWaiting").textContent = nameW;
 }
 
 // ---------- exports ----------
