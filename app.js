@@ -311,6 +311,7 @@ const I18N = {
     cnr: "Admin lozinka prihvaćena — izvlačenje se ponavlja.",
     de: "Admin-Passwort akzeptiert — Auslosung wird wiederholt.",
   },
+  csv_num_header: { mk: "Br.", sr: "Br.", hr: "Br.", ba: "Br.", cnr: "Br.", de: "Nr." },
   csv_team_header: { mk: "Tim", sr: "Tim", hr: "Momčad", ba: "Momčad", cnr: "Tim", de: "Team" },
   csv_name_header: { mk: "Ime", sr: "Ime", hr: "Ime", ba: "Ime", cnr: "Ime", de: "Name" },
   csv_role_header: { mk: "Uloga", sr: "Uloga", hr: "Uloga", ba: "Uloga", cnr: "Uloga", de: "Rolle" },
@@ -1174,12 +1175,12 @@ function pickWhoPlaysFirst() {
 
 function exportCsv() {
   if (!lastTeams) return;
-  const rows = [[t("csv_team_header"), t("csv_name_header"), t("csv_role_header")]];
+  const rows = [[t("csv_num_header"), t("csv_team_header"), t("csv_name_header"), t("csv_role_header")]];
   lastTeams.forEach((team, i) => {
     const teamLabel = `${t("team_word")} ${i + 1} — ${teamLeaderLabel(team, i)}`;
-    team.forEach((p) => {
+    team.forEach((p, idx) => {
       const uloga = p.role === "k" ? t("legend_captain") : p.role === "zk" ? t("legend_vice") : p.role === "g" ? t("legend_gk") : "";
-      rows.push([teamLabel, p.name, uloga]);
+      rows.push([idx + 1, teamLabel, p.name, uloga]);
     });
   });
   const csv = rows.map((r) => r.map(csvEscape).join(",")).join("\n");
@@ -1213,9 +1214,9 @@ function exportPdf() {
       const leader = teamLeaderLabel(team, i);
       const accent = teamAccents[i % teamAccents.length];
       const playersHtml = team
-        .map((p) => {
+        .map((p, idx) => {
           const badge = p.role ? `<span class="role-pill role-${p.role}">${roleLabel[p.role]}</span>` : "";
-          return `<li>${badge}<span class="pname">${escapeHtml(p.name)}</span></li>`;
+          return `<li><span class="pnum">${idx + 1}.</span>${badge}<span class="pname">${escapeHtml(p.name)}</span></li>`;
         })
         .join("");
       return `
@@ -1328,6 +1329,14 @@ function exportPdf() {
         border-top: 1px solid #EEF0F8;
       }
       .pdf-team li:first-child { border-top: none; }
+      .pnum {
+        font-family: 'JetBrains Mono', monospace;
+        font-size: 12px;
+        font-weight: 700;
+        color: #9AA1B5;
+        flex-shrink: 0;
+        min-width: 16px;
+      }
       .role-pill {
         font-family: 'JetBrains Mono', monospace;
         font-size: 9.5px;
