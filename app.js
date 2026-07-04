@@ -50,152 +50,128 @@ const DEFAULT_LANG = "mk";
 
 const I18N = {
   login_subtitle: {
-    mk: "Vnesi ja lozinkata za timot za da vlezeš.",
+    mk: "Внеси ја лозинката за тимот за да влезеш.",
     sr: "Unesi lozinku tima da bi ušao.",
     hr: "Unesi lozinku ekipe da bi ušao.", ba: "Unesi lozinku ekipe da bi ušao.",
     cnr: "Unesi lozinku ekipe da bi ušao.",
     de: "Gib das Team-Passwort ein, um fortzufahren.",
   },
   login_pass_placeholder: {
-    mk: "Lozinka…", sr: "Lozinka…", hr: "Lozinka…", ba: "Lozinka…", cnr: "Lozinka…", de: "Passwort…",
+    mk: "Лозинка…", sr: "Lozinka…", hr: "Lozinka…", ba: "Lozinka…", cnr: "Lozinka…", de: "Passwort…",
   },
   login_btn: {
-    mk: "Vlez", sr: "Uđi", hr: "Uđi", ba: "Uđi", cnr: "Uđi", de: "Anmelden",
+    mk: "Влез", sr: "Uđi", hr: "Uđi", ba: "Uđi", cnr: "Uđi", de: "Anmelden",
   },
   login_error: {
-    mk: "Pogrešna lozinka, probaj povtorno.",
+    mk: "Погрешна лозинка, пробај повторно.",
     sr: "Pogrešna lozinka, probaj ponovo.",
     hr: "Pogrešna lozinka, pokušaj ponovno.", ba: "Pogrešna lozinka, pokušaj ponovno.",
     cnr: "Pogrešna lozinka, probaj ponovo.",
     de: "Falsches Passwort, versuch es noch einmal.",
   },
   banner_lead: {
-    mk: "Vnesi igrači, izberi kapiteni i golmani, i izvlечи tri timovi za denešniot mač.",
+    mk: "Внеси играчи, избери капитени и голмани, и извлечи три тимови за денешниот меч.",
     sr: "Unesi igrače, izaberi kapitene i golmane, i izvuci tri tima za današnji meč.",
     hr: "Unesi igrače, izaberi kapetane i vratare, i izvuci tri momčadi za današnju utakmicu.", ba: "Unesi igrače, izaberi kapetane i vratare, i izvuci tri momčadi za današnju utakmicu.",
     cnr: "Unesi igrače, izaberi kapitene i golmane, i izvuci tri tima za današnji meč.",
     de: "Spieler eingeben, Kapitäne und Torwarte wählen und drei faire Teams fürs heutige Spiel auslosen.",
   },
-  step1: { mk: "Vnes", sr: "Unos", hr: "Unos", ba: "Unos", cnr: "Unos", de: "Eingabe" },
-  step2: { mk: "Uloge", sr: "Uloge", hr: "Uloge", ba: "Uloge", cnr: "Uloge", de: "Rollen" },
-  step3: { mk: "Izvlekuvanje", sr: "Izvlačenje", hr: "Izvlačenje", ba: "Izvlačenje", cnr: "Izvlačenje", de: "Auslosung" },
+  step1: { mk: "Внес", sr: "Unos", hr: "Unos", ba: "Unos", cnr: "Unos", de: "Eingabe" },
+  step2: { mk: "Улоги", sr: "Uloge", hr: "Uloge", ba: "Uloge", cnr: "Uloge", de: "Rollen" },
+  step3: { mk: "Извлекување", sr: "Izvlačenje", hr: "Izvlačenje", ba: "Izvlačenje", cnr: "Izvlačenje", de: "Auslosung" },
 
   logout_btn: {
-    mk: "⏻ Odjava", sr: "⏻ Odjava", hr: "⏻ Odjava", ba: "⏻ Odjava", cnr: "⏻ Odjava", de: "⏻ Abmelden",
+    mk: "⏻ Одјава", sr: "⏻ Odjava", hr: "⏻ Odjava", ba: "⏻ Odjava", cnr: "⏻ Odjava", de: "⏻ Abmelden",
   },
 
   col1_title: {
-    mk: "Baza na igrači", sr: "Baza igrača", hr: "Baza igrača", ba: "Baza igrača", cnr: "Baza igrača", de: "Spielerdatenbank",
+    mk: "База на играчи", sr: "Baza igrača", hr: "Baza igrača", ba: "Baza igrača", cnr: "Baza igrača", de: "Spielerdatenbank",
   },
   col1_hint: {
-    mk: 'Klikni ime za da go dodadeš vo denešniot sostav. „✕" trajno briše od bazata (bara admin lozinka).',
+    mk: 'Кликни име за да го додадеш во денешниот состав. „✕" трајно брише од базата (бара админ лозинка).',
     sr: 'Klikni ime da ga dodaš u današnji sastav. „✕" trajno briše iz baze (potrebna admin lozinka).',
     hr: 'Klikni ime da ga dodaš u današnji sastav. „✕" trajno briše iz baze (potrebna admin lozinka).', ba: 'Klikni ime da ga dodaš u današnji sastav. „✕" trajno briše iz baze (potrebna admin lozinka).',
     cnr: 'Klikni ime da ga dodaš u današnji sastav. „✕" trajno briše iz baze (potrebna admin lozinka).',
     de: 'Klick auf einen Namen, um ihn zum heutigen Kader hinzuzufügen. „✕" löscht ihn dauerhaft (Admin-Passwort erforderlich).',
   },
   roster_search_placeholder: {
-    mk: "Pretraži ja bazata…", sr: "Pretraži bazu…", hr: "Pretraži bazu…", ba: "Pretraži bazu…", cnr: "Pretraži bazu…", de: "Datenbank durchsuchen…",
+    mk: "Пребарај ја базата…", sr: "Pretraži bazu…", hr: "Pretraži bazu…", ba: "Pretraži bazu…", cnr: "Pretraži bazu…", de: "Datenbank durchsuchen…",
   },
   new_roster_placeholder: {
-    mk: "Novo ime za bazata…", sr: "Novo ime za bazu…", hr: "Novo ime za bazu…", ba: "Novo ime za bazu…", cnr: "Novo ime za bazu…", de: "Neuer Name…",
+    mk: "Ново име за базата…", sr: "Novo ime za bazu…", hr: "Novo ime za bazu…", ba: "Novo ime za bazu…", cnr: "Novo ime za bazu…", de: "Neuer Name…",
   },
-  add_roster_btn: { mk: "Dodadi", sr: "Dodaj", hr: "Dodaj", ba: "Dodaj", cnr: "Dodaj", de: "Hinzufügen" },
-  bulk_summary: {
-    mk: "Rakopisno / uvezi listа od notepad",
-    sr: "Ručni unos / uvezi listu iz notepada",
-    hr: "Ručni unos / uvezi popis iz notepada", ba: "Ručni unos / uvezi popis iz notepada",
-    cnr: "Ručni unos / uvezi listu iz notepada",
-    de: "Manuell eingeben / Liste aus Notepad importieren",
-  },
-  bulk_hint: {
-    mk: "Edno ime vo sekoj red. Bazata prima maks. 50 igrači.",
-    sr: "Jedno ime u svakom redu. Baza prima maks. 50 igrača.",
-    hr: "Jedno ime u svakom retku. Baza prima maks. 50 igrača.", ba: "Jedno ime u svakom retku. Baza prima maks. 50 igrača.",
-    cnr: "Jedno ime u svakom redu. Baza prima maks. 50 igrača.",
-    de: "Ein Name pro Zeile. Die Datenbank fasst max. 50 Spieler.",
-  },
-  bulk_textarea_placeholder: {
-    mk: "Igor\nAdo\nHaris…", sr: "Igor\nAdo\nHaris…", hr: "Igor\nAdo\nHaris…", ba: "Igor\nAdo\nHaris…", cnr: "Igor\nAdo\nHaris…", de: "Igor\nAdo\nHaris…",
-  },
-  bulk_import_btn: {
-    mk: "Dodadi ja listata vo bazata",
-    sr: "Dodaj listu u bazu",
-    hr: "Dodaj popis u bazu", ba: "Dodaj popis u bazu",
-    cnr: "Dodaj listu u bazu",
-    de: "Liste zur Datenbank hinzufügen",
-  },
-  export_roster_btn: { mk: "⭳ Export baza (.txt)", sr: "⭳ Izvezi bazu (.txt)", hr: "⭳ Izvezi bazu (.txt)", ba: "⭳ Izvezi bazu (.txt)", cnr: "⭳ Izvezi bazu (.txt)", de: "⭳ Datenbank exportieren (.txt)" },
-  import_roster_btn: { mk: "⭱ Import baza (.txt)", sr: "⭱ Uvezi bazu (.txt)", hr: "⭱ Uvezi bazu (.txt)", ba: "⭱ Uvezi bazu (.txt)", cnr: "⭱ Uvezi bazu (.txt)", de: "⭱ Datenbank importieren (.txt)" },
+  add_roster_btn: { mk: "Додади", sr: "Dodaj", hr: "Dodaj", ba: "Dodaj", cnr: "Dodaj", de: "Hinzufügen" },
+  export_roster_btn: { mk: "⭳ Извези база (.txt)", sr: "⭳ Izvezi bazu (.txt)", hr: "⭳ Izvezi bazu (.txt)", ba: "⭳ Izvezi bazu (.txt)", cnr: "⭳ Izvezi bazu (.txt)", de: "⭳ Datenbank exportieren (.txt)" },
+  import_roster_btn: { mk: "⭱ Внеси база (.txt)", sr: "⭱ Uvezi bazu (.txt)", hr: "⭱ Uvezi bazu (.txt)", ba: "⭱ Uvezi bazu (.txt)", cnr: "⭱ Uvezi bazu (.txt)", de: "⭱ Datenbank importieren (.txt)" },
 
-  col2_title: { mk: "Denešen sostav", sr: "Današnji sastav", hr: "Današnji sastav", ba: "Današnji sastav", cnr: "Današnji sastav", de: "Heutiger Kader" },
+  col2_title: { mk: "Денешен состав", sr: "Današnji sastav", hr: "Današnji sastav", ba: "Današnji sastav", cnr: "Današnji sastav", de: "Heutiger Kader" },
   clear_squad_btn: {
-    mk: "🗑 Isprazni go sostavot", sr: "🗑 Isprazni sastav", hr: "🗑 Isprazni sastav", ba: "🗑 Isprazni sastav", cnr: "🗑 Isprazni sastav", de: "🗑 Kader leeren",
+    mk: "🗑 Испразни го составот", sr: "🗑 Isprazni sastav", hr: "🗑 Isprazni sastav", ba: "🗑 Isprazni sastav", cnr: "🗑 Isprazni sastav", de: "🗑 Kader leeren",
   },
   squad_empty: {
-    mk: "Uште nema izbrani igrači. Klikni imiња od bazata levo.",
+    mk: "Сè уште нема избрани играчи. Кликни имиња од базата лево.",
     sr: "Još nema izabranih igrača. Klikni imena iz baze levo.",
     hr: "Još nema izabranih igrača. Klikni imena iz baze lijevo.", ba: "Još nema izabranih igrača. Klikni imena iz baze lijevo.",
     cnr: "Još nema izabranih igrača. Klikni imena iz baze lijevo.",
     de: "Noch keine Spieler ausgewählt. Klick links auf Namen aus der Datenbank.",
   },
-  legend_captain: { mk: "Kapiten", sr: "Kapiten", hr: "Kapetan", ba: "Kapetan", cnr: "Kapiten", de: "Kapitän" },
-  legend_vice: { mk: "Zamenik", sr: "Zamenik", hr: "Zamjenik", ba: "Zamjenik", cnr: "Zamjenik", de: "Vize-Kapitän" },
-  legend_gk: { mk: "Golman", sr: "Golman", hr: "Vratar", ba: "Vratar", cnr: "Golman", de: "Torwart" },
+  legend_captain: { mk: "Капитен", sr: "Kapiten", hr: "Kapetan", ba: "Kapetan", cnr: "Kapiten", de: "Kapitän" },
+  legend_vice: { mk: "Заменик", sr: "Zamenik", hr: "Zamjenik", ba: "Zamjenik", cnr: "Zamjenik", de: "Vize-Kapitän" },
+  legend_gk: { mk: "Голман", sr: "Golman", hr: "Vratar", ba: "Vratar", cnr: "Golman", de: "Torwart" },
 
-  col3_title: { mk: "Izvlekuvanje", sr: "Izvlačenje", hr: "Izvlačenje", ba: "Izvlačenje", cnr: "Izvlačenje", de: "Auslosung" },
+  col3_title: { mk: "Извлекување", sr: "Izvlačenje", hr: "Izvlačenje", ba: "Izvlačenje", cnr: "Izvlačenje", de: "Auslosung" },
   col3_hint: {
-    mk: "Slučaen raspored — po eden kapiten i zamenik vo sekoj tim, i po eden golman.",
+    mk: "Случаен распоред — по еден капитен и заменик во секој тим, и по еден голман.",
     sr: "Slučajan raspored — po jedan kapiten i zamenik u svakom timu.",
     hr: "Slučajan raspored — po jedan kapetan i zamjenik u svakoj momčadi.", ba: "Slučajan raspored — po jedan kapetan i zamjenik u svakoj momčadi.",
     cnr: "Slučajan raspored — po jedan kapiten i zamjenik u svakom timu.",
     de: "Zufällige Aufteilung — je ein Kapitän und Vize pro Team.",
   },
-  draw_btn: { mk: "🎲 Podeli timovi", sr: "🎲 Podeli timove", hr: "🎲 Podijeli momčadi", ba: "🎲 Podijeli momčadi", cnr: "🎲 Podijeli timove", de: "🎲 Teams auslosen" },
-  pick_first_btn: { mk: "⚽ Koj igra prvi", sr: "⚽ Ko igra prvi", hr: "⚽ Tko igra prvi", ba: "⚽ Tko igra prvi", cnr: "⚽ Ko igra prvi", de: "⚽ Wer spielt zuerst" },
+  draw_btn: { mk: "🎲 Подели тимови", sr: "🎲 Podeli timove", hr: "🎲 Podijeli momčadi", ba: "🎲 Podijeli momčadi", cnr: "🎲 Podijeli timove", de: "🎲 Teams auslosen" },
+  pick_first_btn: { mk: "⚽ Кој игра прв", sr: "⚽ Ko igra prvi", hr: "⚽ Tko igra prvi", ba: "⚽ Tko igra prvi", cnr: "⚽ Ko igra prvi", de: "⚽ Wer spielt zuerst" },
 
-  team1: { mk: "Tim 1", sr: "Tim 1", hr: "Momčad 1", ba: "Momčad 1", cnr: "Tim 1", de: "Team 1" },
-  team2: { mk: "Tim 2", sr: "Tim 2", hr: "Momčad 2", ba: "Momčad 2", cnr: "Tim 2", de: "Team 2" },
-  team3: { mk: "Tim 3", sr: "Tim 3", hr: "Momčad 3", ba: "Momčad 3", cnr: "Tim 3", de: "Team 3" },
-  team_word: { mk: "Tim", sr: "Tim", hr: "Momčad", ba: "Momčad", cnr: "Tim", de: "Team" },
+  team1: { mk: "Тим 1", sr: "Tim 1", hr: "Momčad 1", ba: "Momčad 1", cnr: "Tim 1", de: "Team 1" },
+  team2: { mk: "Тим 2", sr: "Tim 2", hr: "Momčad 2", ba: "Momčad 2", cnr: "Tim 2", de: "Team 2" },
+  team3: { mk: "Тим 3", sr: "Tim 3", hr: "Momčad 3", ba: "Momčad 3", cnr: "Tim 3", de: "Team 3" },
+  team_word: { mk: "Тим", sr: "Tim", hr: "Momčad", ba: "Momčad", cnr: "Tim", de: "Team" },
 
-  matchbox_title: { mk: "KOJ IGRA PRVI", sr: "KO IGRA PRVI", hr: "TKO IGRA PRVI", ba: "TKO IGRA PRVI", cnr: "KO IGRA PRVI", de: "WER SPIELT ZUERST" },
-  matchbox_playing: { mk: "IGRAAT:", sr: "IGRAJU:", hr: "IGRAJU:", ba: "IGRAJU:", cnr: "IGRAJU:", de: "SPIELEN:" },
-  matchbox_waiting: { mk: "ČEKA:", sr: "ČEKA:", hr: "ČEKA:", ba: "ČEKA:", cnr: "ČEKA:", de: "WARTET:" },
+  matchbox_title: { mk: "КОЈ ИГРА ПРВ", sr: "KO IGRA PRVI", hr: "TKO IGRA PRVI", ba: "TKO IGRA PRVI", cnr: "KO IGRA PRVI", de: "WER SPIELT ZUERST" },
+  matchbox_playing: { mk: "ИГРААТ:", sr: "IGRAJU:", hr: "IGRAJU:", ba: "IGRAJU:", cnr: "IGRAJU:", de: "SPIELEN:" },
+  matchbox_waiting: { mk: "ЧЕКА:", sr: "ČEKA:", hr: "ČEKA:", ba: "ČEKA:", cnr: "ČEKA:", de: "WARTET:" },
 
-  export_csv_btn: { mk: "⭳ Export CSV", sr: "⭳ Izvezi CSV", hr: "⭳ Izvezi CSV", ba: "⭳ Izvezi CSV", cnr: "⭳ Izvezi CSV", de: "⭳ CSV exportieren" },
-  export_pdf_btn: { mk: "⭳ Export PDF", sr: "⭳ Izvezi PDF", hr: "⭳ Izvezi PDF", ba: "⭳ Izvezi PDF", cnr: "⭳ Izvezi PDF", de: "⭳ PDF exportieren" },
+  export_csv_btn: { mk: "⭳ Извези CSV", sr: "⭳ Izvezi CSV", hr: "⭳ Izvezi CSV", ba: "⭳ Izvezi CSV", cnr: "⭳ Izvezi CSV", de: "⭳ CSV exportieren" },
+  export_pdf_btn: { mk: "⭳ Извези PDF", sr: "⭳ Izvezi PDF", hr: "⭳ Izvezi PDF", ba: "⭳ Izvezi PDF", cnr: "⭳ Izvezi PDF", de: "⭳ PDF exportieren" },
 
   footer_text: {
-    mk: 'Sè se čuva lokalno vo ovoj brauzer. Koristi „Export baza" za da napraviš rezervna kopija ili za da ja prenesеš na drug uredaj.',
+    mk: 'Сè се чува локално во овој прелистувач. Користи „Извези база" за да направиш резервна копија или за да ја пренесеш на друг уред.',
     sr: 'Sve se čuva lokalno u ovom pregledaču. Koristi „Izvezi bazu" da napraviš rezervnu kopiju ili je prebaciš na drugi uređaj.',
     hr: 'Sve se sprema lokalno u ovom pregledniku. Koristi „Izvezi bazu" da napraviš sigurnosnu kopiju ili je prebaciš na drugi uređaj.', ba: 'Sve se sprema lokalno u ovom pregledniku. Koristi „Izvezi bazu" da napraviš sigurnosnu kopiju ili je prebaciš na drugi uređaj.',
     cnr: 'Sve se čuva lokalno u ovom pregledaču. Koristi „Izvezi bazu" da napraviš rezervnu kopiju ili je prebaciš na drugi uređaj.',
     de: 'Alles wird lokal in diesem Browser gespeichert. Nutze „Datenbank exportieren" für ein Backup oder um es auf ein anderes Gerät zu übertragen.',
   },
   sync_status_shared: {
-    mk: "🟢 Baza na igrači: spodelena preku Firebase (site korisnici ja gledaat).",
+    mk: "🟢 База на играчи: споделена преку Firebase (сите корисници ја гледаат).",
     sr: "🟢 Baza igrača: deljena preko Firebase-a (svi korisnici je vide).",
     hr: "🟢 Baza igrača: dijeljena preko Firebasea (svi korisnici je vide).", ba: "🟢 Baza igrača: dijeljena preko Firebasea (svi korisnici je vide).",
     cnr: "🟢 Baza igrača: deljena preko Firebase-a (svi korisnici je vide).",
     de: "🟢 Spielerdatenbank: über Firebase geteilt (für alle sichtbar).",
   },
   sync_status_local: {
-    mk: "⚪ Baza na igrači: samo lokalno vo ovoj brauzer (Firebase ne e konfiguriran).",
+    mk: "⚪ База на играчи: само локално во овој прелистувач (Firebase не е конфигуриран).",
     sr: "⚪ Baza igrača: samo lokalno u ovom pregledaču (Firebase nije podešen).",
     hr: "⚪ Baza igrača: samo lokalno u ovom pregledniku (Firebase nije podešen).", ba: "⚪ Baza igrača: samo lokalno u ovom pregledniku (Firebase nije podešen).",
     cnr: "⚪ Baza igrača: samo lokalno u ovom pregledaču (Firebase nije podešen).",
     de: "⚪ Spielerdatenbank: nur lokal in diesem Browser (Firebase nicht konfiguriert).",
   },
   sync_status_error: {
-    mk: "🔴 Baza na igrači: Firebase e konfiguriran, no pristapot e odbien — provei gi Rules vo Firebase Console (vidi README).",
+    mk: "🔴 База на играчи: Firebase е конфигуриран, но пристапот е одбиен — провери ги Rules во Firebase Console (види README).",
     sr: "🔴 Baza igrača: Firebase je podešen, ali pristup je odbijen — proveri Rules u Firebase Console-i (vidi README).",
     hr: "🔴 Baza igrača: Firebase je podešen, ali pristup je odbijen — provjeri Rules u Firebase Console-i (vidi README).", ba: "🔴 Baza igrača: Firebase je podešen, ali pristup je odbijen — provjeri Rules u Firebase Console-i (vidi README).",
     cnr: "🔴 Baza igrača: Firebase je podešen, ali pristup je odbijen — proveri Rules u Firebase Console-i (vidi README).",
     de: "🔴 Spielerdatenbank: Firebase konfiguriert, aber Zugriff verweigert — prüfe die Rules in der Firebase Console (siehe README).",
   },
   reset_all_btn: {
-    mk: "♻ Startuvaj odnovo (izbriši sè)",
+    mk: "♻ Стартувај одново (избриши сè)",
     sr: "♻ Počni ispočetka (izbriši sve)",
     hr: "♻ Počni ispočetka (izbriši sve)", ba: "♻ Počni ispočetka (izbriši sve)",
     cnr: "♻ Počni ispočetka (izbriši sve)",
@@ -204,206 +180,196 @@ const I18N = {
 
   // dynamic / toasts / confirms
   roster_empty_db: {
-    mk: "Bazata e prazna. Dodadi igrači dolu za idnina.",
+    mk: "Базата е празна. Додади играчи долу за иднина.",
     sr: "Baza je prazna. Dodaj igrače ispod.",
     hr: "Baza je prazna. Dodaj igrače ispod.", ba: "Baza je prazna. Dodaj igrače ispod.",
     cnr: "Baza je prazna. Dodaj igrače ispod.",
     de: "Die Datenbank ist leer. Füge unten Spieler hinzu.",
   },
   roster_no_results: {
-    mk: 'Nema rezultati za „{query}".',
+    mk: 'Нема резултати за „{query}".',
     sr: 'Nema rezultata za „{query}".',
     hr: 'Nema rezultata za „{query}".', ba: 'Nema rezultata za „{query}".',
     cnr: 'Nema rezultata za „{query}".',
     de: 'Keine Treffer für „{query}".',
   },
-  added_pill: { mk: "Dodaden", sr: "Dodat", hr: "Dodan", ba: "Dodan", cnr: "Dodat", de: "Hinzugefügt" },
+  added_pill: { mk: "Додаден", sr: "Dodat", hr: "Dodan", ba: "Dodan", cnr: "Dodat", de: "Hinzugefügt" },
   del_btn_title: {
-    mk: "Trajno izbriši od bazata (admin lozinka)",
+    mk: "Трајно избриши од базата (админ лозинка)",
     sr: "Trajno obriši iz baze (admin lozinka)",
     hr: "Trajno obriši iz baze (admin lozinka)", ba: "Trajno obriši iz baze (admin lozinka)",
     cnr: "Trajno obriši iz baze (admin lozinka)",
     de: "Dauerhaft löschen (Admin-Passwort)",
   },
   admin_pass_placeholder: {
-    mk: "Admin lozinka…", sr: "Admin lozinka…", hr: "Admin lozinka…", ba: "Admin lozinka…", cnr: "Admin lozinka…", de: "Admin-Passwort…",
+    mk: "Админ лозинка…", sr: "Admin lozinka…", hr: "Admin lozinka…", ba: "Admin lozinka…", cnr: "Admin lozinka…", de: "Admin-Passwort…",
   },
   admin_modal_cancel: {
-    mk: "Otkaži", sr: "Otkaži", hr: "Otkaži", ba: "Otkaži", cnr: "Otkaži", de: "Abbrechen",
+    mk: "Откажи", sr: "Otkaži", hr: "Otkaži", ba: "Otkaži", cnr: "Otkaži", de: "Abbrechen",
   },
   admin_modal_confirm: {
-    mk: "Potvrdi", sr: "Potvrdi", hr: "Potvrdi", ba: "Potvrdi", cnr: "Potvrdi", de: "Bestätigen",
+    mk: "Потврди", sr: "Potvrdi", hr: "Potvrdi", ba: "Potvrdi", cnr: "Potvrdi", de: "Bestätigen",
   },
 
   delete_confirm: {
-    mk: 'Vnesi admin lozinka za trajno da se izbriše „{name}" od bazata:',
+    mk: 'Внеси админ лозинка за трајно да се избрише „{name}" од базата:',
     sr: 'Unesi admin lozinku da trajno obrišeš „{name}" iz baze:',
     hr: 'Unesi admin lozinku za trajno brisanje „{name}" iz baze:', ba: 'Unesi admin lozinku za trajno brisanje „{name}" iz baze:',
     cnr: 'Unesi admin lozinku da trajno obrišeš „{name}" iz baze:',
     de: 'Admin-Passwort eingeben, um „{name}" dauerhaft aus der Datenbank zu löschen:',
   },
   delete_wrong_pass: {
-    mk: "Pogrešna lozinka. Brisanjeto e otkažano.",
+    mk: "Погрешна лозинка. Бришењето е откажано.",
     sr: "Pogrešna lozinka. Brisanje je otkazano.",
     hr: "Pogrešna lozinka. Brisanje je otkazano.", ba: "Pogrešna lozinka. Brisanje je otkazano.",
     cnr: "Pogrešna lozinka. Brisanje je otkazano.",
     de: "Falsches Passwort. Löschen abgebrochen.",
   },
   deleted_toast: {
-    mk: '„{name}" e otstranet od bazata.', sr: '„{name}" je uklonjen iz baze.', hr: '„{name}" je uklonjen iz baze.', ba: '„{name}" je uklonjen iz baze.', cnr: '„{name}" je uklonjen iz baze.', de: '„{name}" wurde aus der Datenbank entfernt.',
+    mk: '„{name}" е отстранет од базата.', sr: '„{name}" je uklonjen iz baze.', hr: '„{name}" je uklonjen iz baze.', ba: '„{name}" je uklonjen iz baze.', cnr: '„{name}" je uklonjen iz baze.', de: '„{name}" wurde aus der Datenbank entfernt.',
   },
   exists_toast: {
-    mk: '„{name}" veke postoi vo bazata.', sr: '„{name}" već postoji u bazi.', hr: '„{name}" već postoji u bazi.', ba: '„{name}" već postoji u bazi.', cnr: '„{name}" već postoji u bazi.', de: '„{name}" existiert bereits in der Datenbank.',
+    mk: '„{name}" веќе постои во базата.', sr: '„{name}" već postoji u bazi.', hr: '„{name}" već postoji u bazi.', ba: '„{name}" već postoji u bazi.', cnr: '„{name}" već postoji u bazi.', de: '„{name}" existiert bereits in der Datenbank.',
   },
   roster_full_toast: {
-    mk: "Bazata e ograničena na {max} igrači. Izbriši nekoгo za da dodadeš nov.",
+    mk: "Базата е ограничена на {max} играчи. Избриши некого за да додадеш нов.",
     sr: "Baza je ograničena na {max} igrača. Obriši nekog da dodaš novog.",
     hr: "Baza je ograničena na {max} igrača. Obriši nekoga da dodaš novog.", ba: "Baza je ograničena na {max} igrača. Obriši nekoga da dodaš novog.",
     cnr: "Baza je ograničena na {max} igrača. Obriši nekog da dodaš novog.",
     de: "Die Datenbank ist auf {max} Spieler begrenzt. Lösche jemanden, um einen neuen hinzuzufügen.",
   },
   added_toast: {
-    mk: '„{name}" e dodaden vo bazata.', sr: '„{name}" je dodat u bazu.', hr: '„{name}" je dodan u bazu.', ba: '„{name}" je dodan u bazu.', cnr: '„{name}" je dodat u bazu.', de: '„{name}" wurde zur Datenbank hinzugefügt.',
-  },
-  bulk_empty_toast: {
-    mk: "Nema iminja vo listata za dodavanje.", sr: "Nema imena u listi za dodavanje.", hr: "Nema imena u popisu za dodavanje.", ba: "Nema imena u popisu za dodavanje.", cnr: "Nema imena u listi za dodavanje.", de: "Keine Namen zum Hinzufügen in der Liste.",
-  },
-  bulk_added_toast: {
-    mk: "Dodadeni {added} novi iminja vo bazata ({total}/{max} vkupno).",
-    sr: "Dodato {added} novih imena u bazu ({total}/{max} ukupno).",
-    hr: "Dodano {added} novih imena u bazu ({total}/{max} ukupno).", ba: "Dodano {added} novih imena u bazu ({total}/{max} ukupno).",
-    cnr: "Dodato {added} novih imena u bazu ({total}/{max} ukupno).",
-    de: "{added} neue Namen zur Datenbank hinzugefügt ({total}/{max} insgesamt).",
+    mk: '„{name}" е додаден во базата.', sr: '„{name}" je dodat u bazu.', hr: '„{name}" je dodan u bazu.', ba: '„{name}" je dodan u bazu.', cnr: '„{name}" je dodat u bazu.', de: '„{name}" wurde zur Datenbank hinzugefügt.',
   },
   full_suffix: {
-    mk: " {skipped} ne stanaa - bazata e polna.",
+    mk: " {skipped} не влегоа - базата е полна.",
     sr: " {skipped} nije stalo - baza je puna.",
     hr: " {skipped} nije stalo - baza je puna.", ba: " {skipped} nije stalo - baza je puna.",
     cnr: " {skipped} nije stalo - baza je puna.",
     de: " {skipped} passten nicht mehr - Datenbank ist voll.",
   },
   import_empty_toast: {
-    mk: "Fajlot e prazen ili nema validni iminja.",
+    mk: "Фајлот е празен или нема валидни имиња.",
     sr: "Fajl je prazan ili nema validnih imena.",
     hr: "Datoteka je prazna ili nema valjanih imena.", ba: "Datoteka je prazna ili nema valjanih imena.",
     cnr: "Fajl je prazan ili nema validnih imena.",
     de: "Die Datei ist leer oder enthält keine gültigen Namen.",
   },
   import_added_toast: {
-    mk: "Uvezeni {added} novi iminja od fajlot ({total}/{max} vkupno).",
+    mk: "Увезени {added} нови имиња од фајлот ({total}/{max} вкупно).",
     sr: "Uvezeno {added} novih imena iz fajla ({total}/{max} ukupno).",
     hr: "Uvezeno {added} novih imena iz datoteke ({total}/{max} ukupno).", ba: "Uvezeno {added} novih imena iz datoteke ({total}/{max} ukupno).",
     cnr: "Uvezeno {added} novih imena iz fajla ({total}/{max} ukupno).",
     de: "{added} neue Namen aus der Datei importiert ({total}/{max} insgesamt).",
   },
   roster_count_hint: {
-    mk: "{count} / {max} igrači vo bazata.",
+    mk: "{count} / {max} играчи во базата.",
     sr: "{count} / {max} igrača u bazi.",
     hr: "{count} / {max} igrača u bazi.", ba: "{count} / {max} igrača u bazi.",
     cnr: "{count} / {max} igrača u bazi.",
     de: "{count} / {max} Spieler in der Datenbank.",
   },
   squad_count_hint: {
-    mk: "{n} igrači • kapiteni {c}/3 • zamenici {v}/3 • golmani {g}/3",
+    mk: "{n} играчи • капитени {c}/3 • заменици {v}/3 • голмани {g}/3",
     sr: "{n} igrača • kapiteni {c}/3 • zamenici {v}/3 • golmani {g}/3",
     hr: "{n} igrača • kapetani {c}/3 • zamjenici {v}/3 • vratari {g}/3", ba: "{n} igrača • kapetani {c}/3 • zamjenici {v}/3 • vratari {g}/3",
     cnr: "{n} igrača • kapiteni {c}/3 • zamjenici {v}/3 • golmani {g}/3",
     de: "{n} Spieler • Kapitäne {c}/3 • Vizes {v}/3 • Torwarte {g}/3",
   },
   toggle_cap_max: {
-    mk: "Veke imaš 3 kapiteni.", sr: "Već imaš 3 kapitena.", hr: "Već imaš 3 kapetana.", ba: "Već imaš 3 kapetana.", cnr: "Već imaš 3 kapitena.", de: "Du hast bereits 3 Kapitäne.",
+    mk: "Веќе имаш 3 капитени.", sr: "Već imaš 3 kapitena.", hr: "Već imaš 3 kapetana.", ba: "Već imaš 3 kapetana.", cnr: "Već imaš 3 kapitena.", de: "Du hast bereits 3 Kapitäne.",
   },
   toggle_vice_max: {
-    mk: "Veke imaš 3 zamenici.", sr: "Već imaš 3 zamenika.", hr: "Već imaš 3 zamjenika.", ba: "Već imaš 3 zamjenika.", cnr: "Već imaš 3 zamjenika.", de: "Du hast bereits 3 Vize-Kapitäne.",
+    mk: "Веќе имаш 3 заменици.", sr: "Već imaš 3 zamenika.", hr: "Već imaš 3 zamjenika.", ba: "Već imaš 3 zamjenika.", cnr: "Već imaš 3 zamjenika.", de: "Du hast bereits 3 Vize-Kapitäne.",
   },
   toggle_gk_max: {
-    mk: "Maksimum 3 golmani.", sr: "Maksimum 3 golmana.", hr: "Maksimalno 3 vratara.", ba: "Maksimalno 3 vratara.", cnr: "Maksimum 3 golmana.", de: "Maximal 3 Torwarte.",
+    mk: "Максимум 3 голмани.", sr: "Maksimum 3 golmana.", hr: "Maksimalno 3 vratara.", ba: "Maksimalno 3 vratara.", cnr: "Maksimum 3 golmana.", de: "Maximal 3 Torwarte.",
   },
   vice_tag_title: {
-    mk: "Zamenik kapiten", sr: "Zamenik kapitena", hr: "Zamjenik kapetana", ba: "Zamjenik kapetana", cnr: "Zamjenik kapitena", de: "Vize-Kapitän",
+    mk: "Заменик капитен", sr: "Zamenik kapitena", hr: "Zamjenik kapetana", ba: "Zamjenik kapetana", cnr: "Zamjenik kapitena", de: "Vize-Kapitän",
   },
   remove_x_title: {
-    mk: "Otstrani od sostavot", sr: "Ukloni iz sastava", hr: "Ukloni iz sastava", ba: "Ukloni iz sastava", cnr: "Ukloni iz sastava", de: "Aus dem Kader entfernen",
+    mk: "Отстрани од составот", sr: "Ukloni iz sastava", hr: "Ukloni iz sastava", ba: "Ukloni iz sastava", cnr: "Ukloni iz sastava", de: "Aus dem Kader entfernen",
   },
   draw_locked_prompt: {
-    mk: "Izvlekuvanjeto veke e napraveno ovaa nedela. Vnesi admin lozinka za da povtoriš:",
+    mk: "Извлекувањето веќе е направено оваа недела. Внеси админ лозинка за да повториш:",
     sr: "Izvlačenje je već obavljeno ove nedelje. Unesi admin lozinku da ponoviš:",
     hr: "Izvlačenje je već obavljeno ovaj tjedan. Unesi admin lozinku da ponoviš:", ba: "Izvlačenje je već obavljeno ove sedmice. Unesi admin lozinku da ponoviš:",
     cnr: "Izvlačenje je već obavljeno ove sedmice. Unesi admin lozinku da ponoviš:",
     de: "Die Auslosung wurde diese Woche bereits durchgeführt. Admin-Passwort eingeben, um zu wiederholen:",
   },
   draw_wrong_pass: {
-    mk: "Pogrešna lozinka. Izvlekuvanjeto e ograničeno na ednaš nedelno.",
+    mk: "Погрешна лозинка. Извлекувањето е ограничено на еднаш неделно.",
     sr: "Pogrešna lozinka. Izvlačenje je ograničeno na jednom nedeljno.",
     hr: "Pogrešna lozinka. Izvlačenje je ograničeno na jednom tjedno.", ba: "Pogrešna lozinka. Izvlačenje je ograničeno na jednom sedmično.",
     cnr: "Pogrešna lozinka. Izvlačenje je ograničeno na jednom sedmično.",
     de: "Falsches Passwort. Die Auslosung ist auf einmal pro Woche begrenzt.",
   },
   draw_admin_ok: {
-    mk: "Admin lozinka prifatena — izvlekuvanjeto se povtoruva.",
+    mk: "Админ лозинка прифатена — извлекувањето се повторува.",
     sr: "Admin lozinka prihvaćena — izvlačenje se ponavlja.",
     hr: "Admin lozinka prihvaćena — izvlačenje se ponavlja.", ba: "Admin lozinka prihvaćena — izvlačenje se ponavlja.",
     cnr: "Admin lozinka prihvaćena — izvlačenje se ponavlja.",
     de: "Admin-Passwort akzeptiert — Auslosung wird wiederholt.",
   },
   pickfirst_locked_prompt: {
-    mk: "Veke e izbrano koj igra prvi ovaa nedela. Vnesi admin lozinka za da povtoriš:",
+    mk: "Веќе е избрано кој игра прв оваа недела. Внеси админ лозинка за да повториш:",
     sr: "Već je izabrano ko igra prvi ove nedelje. Unesi admin lozinku da ponoviš:",
     hr: "Već je izabrano tko igra prvi ovaj tjedan. Unesi admin lozinku da ponoviš:", ba: "Već je izabrano ko igra prvi ove sedmice. Unesi admin lozinku da ponoviš:",
     cnr: "Već je izabrano ko igra prvi ove sedmice. Unesi admin lozinku da ponoviš:",
     de: "Wer zuerst spielt wurde diese Woche bereits bestimmt. Admin-Passwort eingeben, um zu wiederholen:",
   },
   pickfirst_wrong_pass: {
-    mk: 'Pogrešna lozinka. „Koj igra prvi" e ograničeno na ednaš nedelno.',
+    mk: 'Погрешна лозинка. „Кој игра прв" е ограничено на еднаш неделно.',
     sr: 'Pogrešna lozinka. „Ko igra prvi" je ograničeno na jednom nedeljno.',
     hr: 'Pogrešna lozinka. „Tko igra prvi" je ograničeno na jednom tjedno.', ba: 'Pogrešna lozinka. „Ko igra prvi" je ograničeno na jednom sedmično.',
     cnr: 'Pogrešna lozinka. „Ko igra prvi" je ograničeno na jednom sedmično.',
     de: 'Falsches Passwort. „Wer spielt zuerst" ist auf einmal pro Woche begrenzt.',
   },
   pickfirst_admin_ok: {
-    mk: "Admin lozinka prifatena — izborot se povtoruva.",
+    mk: "Админ лозинка прифатена — изборот се повторува.",
     sr: "Admin lozinka prihvaćena — izbor se ponavlja.",
     hr: "Admin lozinka prihvaćena — izbor se ponavlja.", ba: "Admin lozinka prihvaćena — izbor se ponavlja.",
     cnr: "Admin lozinka prihvaćena — izbor se ponavlja.",
     de: "Admin-Passwort akzeptiert — Auswahl wird wiederholt.",
   },
-  csv_num_header: { mk: "Br.", sr: "Br.", hr: "Br.", ba: "Br.", cnr: "Br.", de: "Nr." },
-  csv_team_header: { mk: "Tim", sr: "Tim", hr: "Momčad", ba: "Momčad", cnr: "Tim", de: "Team" },
-  csv_name_header: { mk: "Ime", sr: "Ime", hr: "Ime", ba: "Ime", cnr: "Ime", de: "Name" },
-  csv_role_header: { mk: "Uloga", sr: "Uloga", hr: "Uloga", ba: "Uloga", cnr: "Uloga", de: "Rolle" },
-  pdf_title: { mk: "Kircheim Nogomet — Timovi", sr: "Kircheim Nogomet — Timovi", hr: "Kircheim Nogomet — Momčadi", ba: "Kircheim Nogomet — Momčadi", cnr: "Kircheim Nogomet — Timovi", de: "Kircheim Nogomet — Teams" },
+  csv_num_header: { mk: "Бр.", sr: "Br.", hr: "Br.", ba: "Br.", cnr: "Br.", de: "Nr." },
+  csv_team_header: { mk: "Тим", sr: "Tim", hr: "Momčad", ba: "Momčad", cnr: "Tim", de: "Team" },
+  csv_name_header: { mk: "Име", sr: "Ime", hr: "Ime", ba: "Ime", cnr: "Ime", de: "Name" },
+  csv_role_header: { mk: "Улога", sr: "Uloga", hr: "Uloga", ba: "Uloga", cnr: "Uloga", de: "Rolle" },
+  pdf_title: { mk: "Kircheim Nogomet — Тимови", sr: "Kircheim Nogomet — Timovi", hr: "Kircheim Nogomet — Momčadi", ba: "Kircheim Nogomet — Momčadi", cnr: "Kircheim Nogomet — Timovi", de: "Kircheim Nogomet — Teams" },
   clear_squad_confirm: {
-    mk: "Vnesi admin lozinka za da go isprazniš denešniot sostav (bez da se briše bazata):",
+    mk: "Внеси админ лозинка за да го испразниш денешниот состав (без да се брише базата):",
     sr: "Unesi admin lozinku da isprazniš današnji sastav (bez brisanja baze):",
     hr: "Unesi admin lozinku za pražnjenje današnjeg sastava (bez brisanja baze):", ba: "Unesi admin lozinku za pražnjenje današnjeg sastava (bez brisanja baze):",
     cnr: "Unesi admin lozinku da isprazniš današnji sastav (bez brisanja baze):",
     de: "Admin-Passwort eingeben, um den heutigen Kader zu leeren (ohne die Datenbank zu löschen):",
   },
   clear_squad_wrong_pass: {
-    mk: "Pogrešna lozinka. Praznenjeto e otkažano.",
+    mk: "Погрешна лозинка. Празнењето е откажано.",
     sr: "Pogrešna lozinka. Pražnjenje je otkazano.",
     hr: "Pogrešna lozinka. Pražnjenje je otkazano.", ba: "Pogrešna lozinka. Pražnjenje je otkazano.",
     cnr: "Pogrešna lozinka. Pražnjenje je otkazano.",
     de: "Falsches Passwort. Leeren abgebrochen.",
   },
   clear_squad_empty_toast: {
-    mk: "Sostavot e veke prazen.", sr: "Sastav je već prazan.", hr: "Sastav je već prazan.", ba: "Sastav je već prazan.", cnr: "Sastav je već prazan.", de: "Der Kader ist bereits leer.",
+    mk: "Составот е веќе празен.", sr: "Sastav je već prazan.", hr: "Sastav je već prazan.", ba: "Sastav je već prazan.", cnr: "Sastav je već prazan.", de: "Der Kader ist bereits leer.",
   },
   clear_squad_done_toast: {
-    mk: "Denešniot sostav e isprazneт.", sr: "Današnji sastav je ispražnjen.", hr: "Današnji sastav je ispražnjen.", ba: "Današnji sastav je ispražnjen.", cnr: "Današnji sastav je ispražnjen.", de: "Der heutige Kader wurde geleert.",
+    mk: "Денешниот состав е испразнет.", sr: "Današnji sastav je ispražnjen.", hr: "Današnji sastav je ispražnjen.", ba: "Današnji sastav je ispražnjen.", cnr: "Današnji sastav je ispražnjen.", de: "Der heutige Kader wurde geleert.",
   },
   reset_prompt: {
-    mk: "Ova trajno gi briše bazata na igrači, denešniot sostav i istorijata na izvlekuvanja.\nVnesi admin lozinka za da prodolžiš:",
+    mk: "Ова трајно ги брише базата на играчи, денешниот состав и историјата на извлекувања.\nВнеси админ лозинка за да продолжиш:",
     sr: "Ovo trajno briše bazu igrača, današnji sastav i istoriju izvlačenja.\nUnesi admin lozinku da nastaviš:",
     hr: "Ovo trajno briše bazu igrača, današnji sastav i povijest izvlačenja.\nUnesi admin lozinku za nastavak:", ba: "Ovo trajno briše bazu igrača, današnji sastav i povijest izvlačenja.\nUnesi admin lozinku za nastavak:",
     cnr: "Ovo trajno briše bazu igrača, današnji sastav i istoriju izvlačenja.\nUnesi admin lozinku da nastaviš:",
     de: "Dies löscht dauerhaft die Spielerdatenbank, den heutigen Kader und die Auslosungshistorie.\nAdmin-Passwort eingeben, um fortzufahren:",
   },
   reset_wrong_pass: {
-    mk: "Pogrešna lozinka. Reset e otkažan.", sr: "Pogrešna lozinka. Reset je otkazan.", hr: "Pogrešna lozinka. Reset je otkazan.", ba: "Pogrešna lozinka. Reset je otkazan.", cnr: "Pogrešna lozinka. Reset je otkazan.", de: "Falsches Passwort. Zurücksetzen abgebrochen.",
+    mk: "Погрешна лозинка. Ресетот е откажан.", sr: "Pogrešna lozinka. Reset je otkazan.", hr: "Pogrešna lozinka. Reset je otkazan.", ba: "Pogrešna lozinka. Reset je otkazan.", cnr: "Pogrešna lozinka. Reset je otkazan.", de: "Falsches Passwort. Zurücksetzen abgebrochen.",
   },
   reset_done_toast: {
-    mk: "Sè e izbrišano. Startuvaš odnovo.", sr: "Sve je obrisano. Počinješ ispočetka.", hr: "Sve je obrisano. Počinješ ispočetka.", ba: "Sve je obrisano. Počinješ ispočetka.", cnr: "Sve je obrisano. Počinješ ispočetka.", de: "Alles wurde gelöscht. Du beginnst von vorn.",
+    mk: "Сè е избришано. Стартуваш одново.", sr: "Sve je obrisano. Počinješ ispočetka.", hr: "Sve je obrisano. Počinješ ispočetka.", ba: "Sve je obrisano. Počinješ ispočetka.", cnr: "Sve je obrisano. Počinješ ispočetka.", de: "Alles wurde gelöscht. Du beginnst von vorn.",
   },
 };
 
@@ -1137,38 +1103,6 @@ function addSingleName() {
   toast(t("added_toast", { name }));
 }
 
-function bulkImport() {
-  const raw = document.getElementById("bulkNames").value;
-  const names = raw
-    .split(/\r?\n/)
-    .map((s) => s.trim())
-    .filter(Boolean);
-
-  if (names.length === 0) {
-    toast(t("bulk_empty_toast"));
-    return;
-  }
-
-  let added = 0;
-  let skippedFull = 0;
-  const uniqueIncoming = [...new Map(names.map((n) => [n.toLowerCase(), n])).values()];
-
-  for (const name of uniqueIncoming) {
-    if (normalizedIncludes(roster, name)) continue;
-    if (roster.length >= MAX_ROSTER) { skippedFull++; continue; }
-    roster.push(name);
-    added++;
-  }
-
-  roster.sort((a, b) => a.localeCompare(b, "mk"));
-  saveRoster();
-  renderRoster();
-
-  let msg = t("bulk_added_toast", { added, total: roster.length, max: MAX_ROSTER });
-  if (skippedFull > 0) msg += t("full_suffix", { skipped: skippedFull });
-  toast(msg);
-}
-
 // ---------- export / import roster file ----------
 
 function exportRoster() {
@@ -1762,7 +1696,6 @@ document.getElementById("addRosterBtn").addEventListener("click", addSingleName)
 document.getElementById("newRosterName").addEventListener("keydown", (e) => {
   if (e.key === "Enter") addSingleName();
 });
-document.getElementById("bulkImportBtn").addEventListener("click", bulkImport);
 document.getElementById("exportRosterBtn").addEventListener("click", exportRoster);
 document.getElementById("importRosterInput").addEventListener("change", (e) => {
   const file = e.target.files[0];
