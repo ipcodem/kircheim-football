@@ -6,6 +6,7 @@ const STORAGE_ROSTER = "kircheim.roster.v1";
 const STORAGE_SESSION = "kircheim.session.v1";
 const STORAGE_LAST_DRAW = "kircheim.lastdraw.v1";
 const STORAGE_AUTH = "kircheim.auth.v1";
+const SESSION_MAX_AGE_MS = 60 * 60 * 1000; // 1 čas — posle ovoj period, bara повторно lozinka
 const STORAGE_LANG = "kircheim.lang.v1";
 const MAX_ROSTER = 50;
 
@@ -416,7 +417,15 @@ function buildLangOptionsHtml() {
 
 function isLoggedIn() {
   try {
-    return localStorage.getItem(STORAGE_AUTH) === "1";
+    const raw = localStorage.getItem(STORAGE_AUTH);
+    if (!raw) return false;
+    const savedAt = Number(raw);
+    if (!savedAt || Number.isNaN(savedAt)) return false;
+    if (Date.now() - savedAt > SESSION_MAX_AGE_MS) {
+      localStorage.removeItem(STORAGE_AUTH);
+      return false;
+    }
+    return true;
   } catch {
     return false;
   }
@@ -446,7 +455,7 @@ function tryLogin() {
 
   if (pass === SITE_PASSWORD) {
     try {
-      localStorage.setItem(STORAGE_AUTH, "1");
+      localStorage.setItem(STORAGE_AUTH, String(Date.now()));
     } catch {
       /* ignore */
     }
@@ -469,6 +478,15 @@ document.getElementById("langSelectApp").addEventListener("change", (e) => setLa
 if (isLoggedIn()) {
   showApp();
 }
+
+// Sekoja minuta proveruva dali sesijata e istekla (1 čas), taka što ako
+// korisnikot ja ostavi otvorena stranicata, avtomatski ke se vrati na
+// ekranot za lozinka bez да treba refresh.
+setInterval(() => {
+  if (!document.getElementById("appRoot").hidden && !isLoggedIn()) {
+    logout();
+  }
+}, 60 * 1000);
 
 document.getElementById("loginBtn").addEventListener("click", tryLogin);
 document.getElementById("logoutBtn").addEventListener("click", logout);
