@@ -459,6 +459,7 @@ document.getElementById("loginPassInput").addEventListener("keydown", (e) => {
 // pagja nazad na localStorage (samo lokalno, kako pred izmenata).
 
 let fbDrawLockRef = null;
+let fbRosterRef = null;
 try {
   if (
     typeof FIREBASE_CONFIG !== "undefined" &&
@@ -469,6 +470,7 @@ try {
   ) {
     firebase.initializeApp(FIREBASE_CONFIG);
     fbDrawLockRef = firebase.database().ref("kircheimDrawLock");
+    fbRosterRef = firebase.database().ref("kircheimRoster");
   } else {
     console.warn(
       "Firebase ne e konfiguriran (vidi firebase-config.js) — nedelnata brava raboti samo lokalno vo ovoj browser."
@@ -477,6 +479,7 @@ try {
 } catch (err) {
   console.error("Firebase init ne uspea, se koristi lokalna brava:", err);
   fbDrawLockRef = null;
+  fbRosterRef = null;
 }
 
 /** Ponedelnik (kako početok na nedelata) za dadeниот datum, format YYYY-MM-DD. */
@@ -550,8 +553,61 @@ function loadRoster() {
   }
 }
 
+/** Ja čuva bazata SAMO lokalno (koristeno od realtime listener-ot, za da
+ *  ne se predizvika beskonečna jamka na zapišuvanje). */
+function saveRosterLocalOnly() {
+  try {
+    localStorage.setItem(STORAGE_ROSTER, JSON.stringify(roster));
+  } catch {
+    /* ignore */
+  }
+}
+
+/** Ja čuva bazata lokalno I ja isprakja do Firebase (ako e konfiguriran),
+ *  za da ja vidat SITE korisnici, na bilo koj uredaj/browser, vedna_shto
+ *  se dodade/izbriše igrač. */
 function saveRoster() {
-  localStorage.setItem(STORAGE_ROSTER, JSON.stringify(roster));
+  saveRosterLocalOnly();
+  if (fbRosterRef) {
+    fbRosterRef.set(roster).catch((err) => {
+      console.error("Ne mozhe da se zapiše spodelenata baza na Firebase:", err);
+    });
+  }
+}
+
+/** Ako e dostapen Firebase, sledi gi promenite na bazata na igrači vo
+ *  realno vreme, taka što sekoj korisnik na bilo koj uredaj gi gleda
+ *  dodavanjata/brisanjata na drugite (bez да treba да refreshira). */
+function initRosterSync() {
+  if (!fbRosterRef) return;
+
+  fbRosterRef.on(
+    "value",
+    (snap) => {
+      const exists = snap.exists();
+      const val = exists ? snap.val() : null;
+
+      if (!exists) {
+        // Firebase e prazen (prv pat) — prenesi ja postoječkata lokalna
+        // baza, ako ima nešto vo nea, taka što ne se gubi.
+        if (roster.length > 0) {
+          fbRosterRef.set(roster).catch((err) => {
+            console.error("Ne mozhe da se prenese lokalnata baza na Firebase:", err);
+          });
+        }
+        return;
+      }
+
+      const remoteRoster = Array.isArray(val) ? val : Object.values(val || {});
+      roster = remoteRoster.filter((n) => typeof n === "string");
+      saveRosterLocalOnly();
+      renderRoster();
+      renderSquad();
+    },
+    (err) => {
+      console.error("Ne mozhe da se sledi spodelenata baza, koristam lokalna:", err);
+    }
+  );
 }
 
 function loadSession() {
@@ -1079,6 +1135,14 @@ async function resetAll() {
     }
   }
 
+  if (fbRosterRef) {
+    try {
+      await fbRosterRef.remove();
+    } catch (err) {
+      console.error("Ne mozhe da se izbriše spodelenata baza:", err);
+    }
+  }
+
   renderRoster();
   renderSquad();
   document.getElementById("teamsGrid").querySelectorAll("ul").forEach((ul) => (ul.innerHTML = ""));
@@ -1115,3 +1179,4 @@ document.getElementById("exportPdfBtn").addEventListener("click", exportPdf);
 
 renderRoster();
 renderSquad();
+initRosterSync();
