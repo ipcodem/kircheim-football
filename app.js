@@ -730,7 +730,7 @@ function saveRoster() {
   if (fbRosterRef) {
     fbRosterRef.set(roster).catch((err) => {
       console.error("Ne mozhe da se zapiše spodelenata baza na Firebase:", err);
-      toast(`⚠ Sinhronizacijata ne uspea (${err.code || err.message || err}). Promenata e samo lokalna.`);
+      toast(`⚠ Синхронизацијата не успеа (${err.code || err.message || err}). Промената е само локална.`);
       updateSyncStatus("error");
     });
   }
@@ -811,7 +811,7 @@ function saveSession() {
   if (fbSquadRef) {
     fbSquadRef.set(squad).catch((err) => {
       console.error("Ne mozhe da se zapiše spodeleniot sostav na Firebase:", err);
-      toast(`⚠ Sinhronizacijata ne uspea (${err.code || err.message || err}). Promenata e samo lokalna.`);
+      toast(`⚠ Синхронизацијата не успеа (${err.code || err.message || err}). Промената е само локална.`);
       updateSyncStatus("error");
     });
   }
