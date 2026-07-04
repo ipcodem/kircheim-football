@@ -5,6 +5,7 @@
 const STORAGE_ROSTER = "kircheim.roster.v1";
 const STORAGE_SESSION = "kircheim.session.v1";
 const STORAGE_LAST_DRAW = "kircheim.lastdraw.v1";
+const STORAGE_LAST_PICKFIRST = "kircheim.lastpickfirst.v1";
 const STORAGE_AUTH = "kircheim.auth.v1";
 const SESSION_MAX_AGE_MS = 60 * 60 * 1000; // 1 čas — posle ovoj period, bara повторно lozinka
 const STORAGE_LANG = "kircheim.lang.v1";
@@ -322,6 +323,27 @@ const I18N = {
     cnr: "Admin lozinka prihvaćena — izvlačenje se ponavlja.",
     de: "Admin-Passwort akzeptiert — Auslosung wird wiederholt.",
   },
+  pickfirst_locked_prompt: {
+    mk: "Veke e izbrano koj igra prvi ovaa nedela. Vnesi admin lozinka za da povtoriš:",
+    sr: "Već je izabrano ko igra prvi ove nedelje. Unesi admin lozinku da ponoviš:",
+    hr: "Već je izabrano tko igra prvi ovaj tjedan. Unesi admin lozinku da ponoviš:", ba: "Već je izabrano ko igra prvi ove sedmice. Unesi admin lozinku da ponoviš:",
+    cnr: "Već je izabrano ko igra prvi ove sedmice. Unesi admin lozinku da ponoviš:",
+    de: "Wer zuerst spielt wurde diese Woche bereits bestimmt. Admin-Passwort eingeben, um zu wiederholen:",
+  },
+  pickfirst_wrong_pass: {
+    mk: 'Pogrešna lozinka. „Koj igra prvi" e ograničeno na ednaš nedelno.',
+    sr: 'Pogrešna lozinka. „Ko igra prvi" je ograničeno na jednom nedeljno.',
+    hr: 'Pogrešna lozinka. „Tko igra prvi" je ograničeno na jednom tjedno.', ba: 'Pogrešna lozinka. „Ko igra prvi" je ograničeno na jednom sedmično.',
+    cnr: 'Pogrešna lozinka. „Ko igra prvi" je ograničeno na jednom sedmično.',
+    de: 'Falsches Passwort. „Wer spielt zuerst" ist auf einmal pro Woche begrenzt.',
+  },
+  pickfirst_admin_ok: {
+    mk: "Admin lozinka prifatena — izborot se povtoruva.",
+    sr: "Admin lozinka prihvaćena — izbor se ponavlja.",
+    hr: "Admin lozinka prihvaćena — izbor se ponavlja.", ba: "Admin lozinka prihvaćena — izbor se ponavlja.",
+    cnr: "Admin lozinka prihvaćena — izbor se ponavlja.",
+    de: "Admin-Passwort akzeptiert — Auswahl wird wiederholt.",
+  },
   csv_num_header: { mk: "Br.", sr: "Br.", hr: "Br.", ba: "Br.", cnr: "Br.", de: "Nr." },
   csv_team_header: { mk: "Tim", sr: "Tim", hr: "Momčad", ba: "Momčad", cnr: "Tim", de: "Team" },
   csv_name_header: { mk: "Ime", sr: "Ime", hr: "Ime", ba: "Ime", cnr: "Ime", de: "Name" },
@@ -510,6 +532,7 @@ document.getElementById("loginPassInput").addEventListener("keydown", (e) => {
 // pagja nazad na localStorage (samo lokalno, kako pred izmenata).
 
 let fbDrawLockRef = null;
+let fbPickFirstLockRef = null;
 let fbRosterRef = null;
 let fbSquadRef = null;
 let fbDrawResultRef = null;
@@ -523,6 +546,7 @@ try {
   ) {
     firebase.initializeApp(FIREBASE_CONFIG);
     fbDrawLockRef = firebase.database().ref("kircheimDrawLock");
+    fbPickFirstLockRef = firebase.database().ref("kircheimPickFirstLock");
     fbRosterRef = firebase.database().ref("kircheimRoster");
     fbSquadRef = firebase.database().ref("kircheimSquad");
     fbDrawResultRef = firebase.database().ref("kircheimDrawResult");
@@ -534,6 +558,7 @@ try {
 } catch (err) {
   console.error("Firebase init ne uspea, se koristi lokalna brava:", err);
   fbDrawLockRef = null;
+  fbPickFirstLockRef = null;
   fbRosterRef = null;
   fbSquadRef = null;
   fbDrawResultRef = null;
@@ -610,6 +635,42 @@ async function setLastDrawWeek() {
   }
 }
 
+/** Ja vraka nedelata (YYYY-MM-DD) na poslednoto "koj igra prvi" — spodeleno ako e možno. */
+async function getLastPickFirstWeek() {
+  if (fbPickFirstLockRef) {
+    try {
+      const snap = await fbPickFirstLockRef.get();
+      const val = snap.exists() ? snap.val() : null;
+      if (val && val.weekKey) return val.weekKey;
+      return "";
+    } catch (err) {
+      console.error("Ne mozhe da se pročita spodelenata brava za 'koj igra prvi', koristam lokalna:", err);
+    }
+  }
+  try {
+    return localStorage.getItem(STORAGE_LAST_PICKFIRST) || "";
+  } catch {
+    return "";
+  }
+}
+
+/** Go zapišuva tekovnata nedela kako "koj igra prvi veke izbrano" — spodeleno ako e možno. */
+async function setPickFirstWeek() {
+  const key = currentWeekKey();
+  try {
+    localStorage.setItem(STORAGE_LAST_PICKFIRST, key);
+  } catch {
+    /* ignore */
+  }
+  if (fbPickFirstLockRef) {
+    try {
+      await fbPickFirstLockRef.set({ weekKey: key, ts: Date.now() });
+    } catch (err) {
+      console.error("Ne mozhe da se zapiše spodelenata brava za 'koj igra prvi':", err);
+    }
+  }
+}
+
 /** @type {string[]} full saved player database */
 let roster = loadRoster();
 
@@ -657,6 +718,8 @@ function saveRoster() {
 /** Ako e dostapen Firebase, sledi gi promenite na bazata na igrači vo
  *  realno vreme, taka što sekoj korisnik na bilo koj uredaj gi gleda
  *  dodavanjata/brisanjata na drugite (bez да treba да refreshira). */
+let rosterSyncSeeded = false;
+
 function initRosterSync() {
   if (!fbRosterRef) return;
 
@@ -669,17 +732,27 @@ function initRosterSync() {
       const val = exists ? snap.val() : null;
 
       if (!exists) {
-        // Firebase e prazen (prv pat) — prenesi ja postoječkata lokalna
-        // baza, ako ima nešto vo nea, taka što ne se gubi.
-        if (roster.length > 0) {
+        // Samo PRV pat (koga Firebase e navistina seуšte nikogaš
+        // nezapišan) ja prenesuvame postoječkata lokalna baza. Ako
+        // podocna nekoj namerno ja izbriše celata baza (do 0 igrači),
+        // NE smee повторно da se prenesuva staroto lokalno sostojanie —
+        // toa ke gi "voskresne" veke izbrišanite igrači.
+        if (!rosterSyncSeeded && roster.length > 0) {
           fbRosterRef.set(roster).catch((err) => {
             console.error("Ne mozhe da se prenese lokalnata baza na Firebase:", err);
             updateSyncStatus("error");
           });
+        } else if (roster.length > 0) {
+          roster = [];
+          saveRosterLocalOnly();
+          renderRoster();
+          renderSquad();
         }
+        rosterSyncSeeded = true;
         return;
       }
 
+      rosterSyncSeeded = true;
       const remoteRoster = Array.isArray(val) ? val : Object.values(val || {});
       roster = remoteRoster.filter((n) => typeof n === "string");
       saveRosterLocalOnly();
@@ -723,6 +796,8 @@ function saveSession() {
 
 /** Sledi go dnešniot sostav (koj e izbran, kapiten/zamenik/golman) vo
  *  realno vreme, taka što site korisnici go gledaat istiot sostav. */
+let squadSyncSeeded = false;
+
 function initSquadSync() {
   if (!fbSquadRef) return;
 
@@ -733,14 +808,28 @@ function initSquadSync() {
       const val = exists ? snap.val() : null;
 
       if (!exists) {
-        if (squad.length > 0) {
+        // Samo PRV pat (koga ovoj uredaj se poврзuva a na Firebase seуšte
+        // nikogaš ništo ne е zapišano) go prenesuvame lokalniot sostav.
+        // Ako podocna nekoj namerno go isprazni sostavot (go izbriše
+        // poslednuiot igrač), nodot na Firebase isto stanuva "prazen", no
+        // NE smee повторно da se prenesuva staroto lokalno sostojanie —
+        // toa ke go "voskresne" veke izbrišaniot igrač.
+        if (!squadSyncSeeded && squad.length > 0) {
           fbSquadRef.set(squad).catch((err) => {
             console.error("Ne mozhe da se prenese lokalniot sostav na Firebase:", err);
           });
+        } else if (squad.length > 0) {
+          // Firebase e navistina prazen (namerno ispraznet) - uskladi go
+          // lokalnoto sostojanie so toa, namesto da go prenesuvame nazad.
+          squad = [];
+          saveSessionLocalOnly();
+          renderSquad();
         }
+        squadSyncSeeded = true;
         return;
       }
 
+      squadSyncSeeded = true;
       const remoteSquad = Array.isArray(val) ? val : Object.values(val || {});
       squad = remoteSquad.filter((p) => p && typeof p.name === "string");
       saveSessionLocalOnly();
@@ -1221,11 +1310,24 @@ function teamLeaderLabel(team, teamIndex) {
   return `${t("team_word")} ${teamIndex + 1}`;
 }
 
-function pickWhoPlaysFirst() {
+async function pickWhoPlaysFirst() {
   if (!lastTeams) return;
+
+  const lastWeek = await getLastPickFirstWeek();
+  if (lastWeek === currentWeekKey()) {
+    const pass = await askAdminPassword(t("pickfirst_locked_prompt"));
+    if (pass === null) return; // otkažano
+    if (pass !== ADMIN_PASSWORD) {
+      toast(t("pickfirst_wrong_pass"));
+      return;
+    }
+    toast(t("pickfirst_admin_ok"));
+  }
+
   const pairs = [[0, 1, 2], [0, 2, 1], [1, 2, 0]]; // [playerA, playerB, waiting]
   const [a, b, w] = pairs[Math.floor(Math.random() * pairs.length)];
   lastMatch = { a, b, w };
+  await setPickFirstWeek();
   saveDrawResult();
 
   const box = document.getElementById("matchBox");
@@ -1536,6 +1638,7 @@ async function resetAll() {
     localStorage.removeItem(STORAGE_ROSTER);
     localStorage.removeItem(STORAGE_SESSION);
     localStorage.removeItem(STORAGE_LAST_DRAW);
+    localStorage.removeItem(STORAGE_LAST_PICKFIRST);
   } catch {
     /* ignore */
   }
@@ -1545,6 +1648,14 @@ async function resetAll() {
       await fbDrawLockRef.remove();
     } catch (err) {
       console.error("Ne mozhe da se izbriše spodelenata brava:", err);
+    }
+  }
+
+  if (fbPickFirstLockRef) {
+    try {
+      await fbPickFirstLockRef.remove();
+    } catch (err) {
+      console.error("Ne mozhe da se izbriše spodelenata brava za 'koj igra prvi':", err);
     }
   }
 
