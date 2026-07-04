@@ -47,10 +47,10 @@ const I18N = {
     de: "Falsches Passwort, versuch es noch einmal.",
   },
   banner_lead: {
-    mk: "Vnesi igrači, izberi kapiteni i golmani, i izvlечи tri fer timovi za denešniot mač.",
-    sr: "Unesi igrače, izaberi kapitene i golmane, i izvuci tri fer tima za današnji meč.",
-    hr: "Unesi igrače, izaberi kapetane i vratare, i izvuci tri fer momčadi za današnju utakmicu.", ba: "Unesi igrače, izaberi kapetane i vratare, i izvuci tri fer momčadi za današnju utakmicu.",
-    cnr: "Unesi igrače, izaberi kapitene i golmane, i izvuci tri fer tima za današnji meč.",
+    mk: "Vnesi igrači, izberi kapiteni i golmani, i izvlечи tri timovi za denešniot mač.",
+    sr: "Unesi igrače, izaberi kapitene i golmane, i izvuci tri tima za današnji meč.",
+    hr: "Unesi igrače, izaberi kapetane i vratare, i izvuci tri momčadi za današnju utakmicu.", ba: "Unesi igrače, izaberi kapetane i vratare, i izvuci tri momčadi za današnju utakmicu.",
+    cnr: "Unesi igrače, izaberi kapitene i golmane, i izvuci tri tima za današnji meč.",
     de: "Spieler eingeben, Kapitäne und Torwarte wählen und drei faire Teams fürs heutige Spiel auslosen.",
   },
   step1: { mk: "Vnes", sr: "Unos", hr: "Unos", ba: "Unos", cnr: "Unos", de: "Eingabe" },
@@ -123,10 +123,10 @@ const I18N = {
   col3_title: { mk: "Izvlekuvanje", sr: "Izvlačenje", hr: "Izvlačenje", ba: "Izvlačenje", cnr: "Izvlačenje", de: "Auslosung" },
   col3_hint: {
     mk: "Slučaen raspored — po eden kapiten i zamenik vo sekoj tim, i po eden golman.",
-    sr: "Slučajan, ali fer raspored — po jedan kapiten i zamenik u svakom timu.",
-    hr: "Slučajan, ali fer raspored — po jedan kapetan i zamjenik u svakoj momčadi.", ba: "Slučajan, ali fer raspored — po jedan kapetan i zamjenik u svakoj momčadi.",
-    cnr: "Slučajan, ali fer raspored — po jedan kapiten i zamjenik u svakom timu.",
-    de: "Zufällige, aber faire Aufteilung — je ein Kapitän und Vize pro Team.",
+    sr: "Slučajan raspored — po jedan kapiten i zamenik u svakom timu.",
+    hr: "Slučajan raspored — po jedan kapetan i zamjenik u svakoj momčadi.", ba: "Slučajan raspored — po jedan kapetan i zamjenik u svakoj momčadi.",
+    cnr: "Slučajan raspored — po jedan kapiten i zamjenik u svakom timu.",
+    de: "Zufällige Aufteilung — je ein Kapitän und Vize pro Team.",
   },
   draw_btn: { mk: "🎲 Podeli timovi", sr: "🎲 Podeli timove", hr: "🎲 Podijeli momčadi", ba: "🎲 Podijeli momčadi", cnr: "🎲 Podijeli timove", de: "🎲 Teams auslosen" },
   pick_first_btn: { mk: "⚽ Koj igra prvi", sr: "⚽ Ko igra prvi", hr: "⚽ Tko igra prvi", ba: "⚽ Tko igra prvi", cnr: "⚽ Ko igra prvi", de: "⚽ Wer spielt zuerst" },
@@ -711,6 +711,8 @@ function saveRoster() {
   if (fbRosterRef) {
     fbRosterRef.set(roster).catch((err) => {
       console.error("Ne mozhe da se zapiše spodelenata baza na Firebase:", err);
+      toast(`⚠ Sinhronizacijata ne uspea (${err.code || err.message || err}). Promenata e samo lokalna.`);
+      updateSyncStatus("error");
     });
   }
 }
@@ -790,6 +792,8 @@ function saveSession() {
   if (fbSquadRef) {
     fbSquadRef.set(squad).catch((err) => {
       console.error("Ne mozhe da se zapiše spodeleniot sostav na Firebase:", err);
+      toast(`⚠ Sinhronizacijata ne uspea (${err.code || err.message || err}). Promenata e samo lokalna.`);
+      updateSyncStatus("error");
     });
   }
 }
@@ -804,6 +808,8 @@ function initSquadSync() {
   fbSquadRef.on(
     "value",
     (snap) => {
+      updateSyncStatus("shared");
+
       const exists = snap.exists();
       const val = exists ? snap.val() : null;
 
@@ -837,6 +843,7 @@ function initSquadSync() {
     },
     (err) => {
       console.error("Ne mozhe da se sledi spodeleniot sostav, koristam lokalen:", err);
+      updateSyncStatus("error");
     }
   );
 }
