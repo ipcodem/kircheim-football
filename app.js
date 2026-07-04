@@ -1176,9 +1176,10 @@ function exportCsv() {
   if (!lastTeams) return;
   const rows = [[t("csv_team_header"), t("csv_name_header"), t("csv_role_header")]];
   lastTeams.forEach((team, i) => {
+    const teamLabel = `${t("team_word")} ${i + 1} — ${teamLeaderLabel(team, i)}`;
     team.forEach((p) => {
       const uloga = p.role === "k" ? t("legend_captain") : p.role === "zk" ? t("legend_vice") : p.role === "g" ? t("legend_gk") : "";
-      rows.push([`${t("team_word")} ${i + 1}`, p.name, uloga]);
+      rows.push([teamLabel, p.name, uloga]);
     });
   });
   const csv = rows.map((r) => r.map(csvEscape).join(",")).join("\n");
@@ -1198,54 +1199,218 @@ function csvEscape(v) {
 
 function exportPdf() {
   if (!lastTeams) return;
-  const win = window.open("", "_blank");
+
+  const teamAccents = ["#E8B94A", "#2FBF9F", "#E1574B"]; // gold / teal / red — matches app accents
+  const roleLabel = { k: "K", zk: "ZK", g: "G" };
+  const roleName = {
+    k: t("legend_captain"),
+    zk: t("legend_vice"),
+    g: t("legend_gk"),
+  };
+
   const teamHtml = lastTeams
-    .map(
-      (team, i) => `
-      <div class="pdf-team">
-        <h2>${t("team_word")} ${i + 1}</h2>
-        <ul>${team
-          .map((p) => {
-            const uloga = p.role === "k" ? " (K)" : p.role === "zk" ? " (ZK)" : p.role === "g" ? " (G)" : "";
-            return `<li>${escapeHtml(p.name)}${uloga}</li>`;
-          })
-          .join("")}</ul>
-      </div>`
-    )
+    .map((team, i) => {
+      const leader = teamLeaderLabel(team, i);
+      const accent = teamAccents[i % teamAccents.length];
+      const playersHtml = team
+        .map((p) => {
+          const badge = p.role ? `<span class="role-pill role-${p.role}">${roleLabel[p.role]}</span>` : "";
+          return `<li>${badge}<span class="pname">${escapeHtml(p.name)}</span></li>`;
+        })
+        .join("");
+      return `
+      <div class="pdf-team" style="--accent:${accent}">
+        <div class="pdf-team-head">
+          <h2>${escapeHtml(leader)}</h2>
+        </div>
+        <ul>${playersHtml}</ul>
+      </div>`;
+    })
     .join("");
 
-  const matchHtml = lastMatch
-    ? `
-      <div class="pdf-match">
-        <h2>${t("matchbox_title")}</h2>
-        <p><strong>${t("matchbox_playing")}</strong> ${t("team_word")} ${lastMatch.a + 1} vs ${t("team_word")} ${lastMatch.b + 1}</p>
-        <p><strong>${t("matchbox_waiting")}</strong> ${t("team_word")} ${lastMatch.w + 1}</p>
+  const matchHtml =
+    lastMatch && lastTeams
+      ? `
+      <div class="match-card">
+        <div class="match-card-title">⚽ ${t("matchbox_title")}</div>
+        <div class="match-card-vs">
+          <span class="match-name">${escapeHtml(teamLeaderLabel(lastTeams[lastMatch.a], lastMatch.a))}</span>
+          <span class="match-vs">VS</span>
+          <span class="match-name">${escapeHtml(teamLeaderLabel(lastTeams[lastMatch.b], lastMatch.b))}</span>
+        </div>
+        <p class="match-waiting"><strong>${t("matchbox_waiting")}</strong> ${escapeHtml(teamLeaderLabel(lastTeams[lastMatch.w], lastMatch.w))}</p>
       </div>`
-    : "";
+      : "";
 
+  const win = window.open("", "_blank");
   win.document.write(`
     <html><head><title>${t("pdf_title")}</title>
+    <meta charset="UTF-8" />
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@600;700&family=Inter:wght@400;500;600;700&family=JetBrains+Mono:wght@600;700&display=swap" rel="stylesheet">
     <style>
-      body { font-family: Arial, sans-serif; padding: 40px; }
-      h1 { margin-bottom: 4px; }
-      .pdf-teams { display: flex; gap: 30px; margin-top: 24px; }
-      .pdf-team { flex: 1; }
-      .pdf-team h2 { border-bottom: 2px solid #333; padding-bottom: 6px; }
-      li { margin-bottom: 6px; font-size: 15px; }
-      .pdf-match { margin-top: 28px; padding-top: 16px; border-top: 2px solid #333; }
-      .pdf-match h2 { margin-bottom: 8px; }
-      .pdf-match p { margin: 4px 0; font-size: 15px; }
+      :root {
+        --navy-0: #131A2C;
+        --navy-1: #1D2745;
+        --navy-2: #283257;
+        --ink: #1B2033;
+        --muted: #6b7593;
+        --gold: #E8B94A;
+      }
+      * { box-sizing: border-box; }
+      body {
+        font-family: 'Inter', Arial, sans-serif;
+        color: var(--ink);
+        margin: 0;
+        padding: 0 36px 40px;
+        background: #F7F8FC;
+      }
+      .pdf-banner {
+        margin: 0 -36px 28px;
+        padding: 28px 36px 22px;
+        background: linear-gradient(135deg, var(--navy-0), var(--navy-1));
+        color: #F3F5FA;
+        display: flex;
+        align-items: baseline;
+        justify-content: space-between;
+        flex-wrap: wrap;
+        gap: 6px;
+      }
+      .pdf-banner h1 {
+        font-family: 'Space Grotesk', sans-serif;
+        font-size: 26px;
+        margin: 0;
+        letter-spacing: -0.01em;
+      }
+      .pdf-banner h1 span { color: var(--gold); }
+      .pdf-banner .pdf-date {
+        font-family: 'JetBrains Mono', monospace;
+        font-size: 12.5px;
+        color: #C7CEE3;
+      }
+
+      .pdf-teams { display: flex; gap: 20px; margin-top: 4px; }
+      .pdf-team {
+        flex: 1;
+        background: #fff;
+        border-radius: 14px;
+        border: 1px solid #E4E7F2;
+        border-top: 5px solid var(--accent);
+        padding: 16px 16px 18px;
+      }
+      .pdf-team-head { margin-bottom: 10px; }
+      .pdf-team-tag {
+        display: inline-block;
+        font-family: 'JetBrains Mono', monospace;
+        font-size: 10.5px;
+        font-weight: 700;
+        letter-spacing: 0.06em;
+        text-transform: uppercase;
+        color: var(--accent);
+        border: 1px solid var(--accent);
+        border-radius: 6px;
+        padding: 2px 7px;
+        margin-bottom: 6px;
+      }
+      .pdf-team h2 {
+        font-family: 'Space Grotesk', sans-serif;
+        font-size: 19px;
+        margin: 4px 0 0;
+      }
+      .pdf-team ul { list-style: none; margin: 12px 0 0; padding: 0; }
+      .pdf-team li {
+        display: flex;
+        align-items: center;
+        gap: 8px;
+        font-size: 14px;
+        padding: 6px 0;
+        border-top: 1px solid #EEF0F8;
+      }
+      .pdf-team li:first-child { border-top: none; }
+      .role-pill {
+        font-family: 'JetBrains Mono', monospace;
+        font-size: 9.5px;
+        font-weight: 700;
+        border-radius: 5px;
+        padding: 2px 5px;
+        color: #fff;
+        flex-shrink: 0;
+      }
+      .role-k { background: #C99A2E; }
+      .role-zk { background: #1E9C82; }
+      .role-g { background: #C7473C; }
+
+      .match-card {
+        margin-top: 26px;
+        background: linear-gradient(135deg, var(--navy-1), var(--navy-2));
+        color: #F3F5FA;
+        border-radius: 16px;
+        padding: 22px 26px;
+        text-align: center;
+      }
+      .match-card-title {
+        font-family: 'Space Grotesk', sans-serif;
+        font-size: 13px;
+        letter-spacing: 0.08em;
+        text-transform: uppercase;
+        color: var(--gold);
+        margin-bottom: 12px;
+      }
+      .match-card-vs {
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        gap: 18px;
+        flex-wrap: wrap;
+      }
+      .match-name {
+        font-family: 'Space Grotesk', sans-serif;
+        font-size: 22px;
+        font-weight: 700;
+      }
+      .match-vs {
+        font-family: 'JetBrains Mono', monospace;
+        font-size: 13px;
+        color: var(--gold);
+        border: 1px solid rgba(232,185,74,0.5);
+        border-radius: 20px;
+        padding: 4px 10px;
+      }
+      .match-waiting {
+        margin: 14px 0 0;
+        font-size: 13.5px;
+        color: #C7CEE3;
+      }
+      .match-waiting strong { color: #F3F5FA; }
+
+      .pdf-footer {
+        margin-top: 30px;
+        text-align: center;
+        font-size: 11.5px;
+        color: var(--muted);
+      }
+
+      @media print {
+        body { background: #fff; }
+        .pdf-banner { -webkit-print-color-adjust: exact; print-color-adjust: exact; }
+        .match-card { -webkit-print-color-adjust: exact; print-color-adjust: exact; }
+        .role-pill { -webkit-print-color-adjust: exact; print-color-adjust: exact; }
+      }
     </style>
     </head><body>
-      <h1>Kircheim Nogomet</h1>
-      <p>${new Date().toLocaleDateString("mk-MK")}</p>
+      <div class="pdf-banner">
+        <h1>Kircheim <span>Nogomet</span></h1>
+        <span class="pdf-date">${new Date().toLocaleDateString("mk-MK")}</span>
+      </div>
       <div class="pdf-teams">${teamHtml}</div>
       ${matchHtml}
+      <p class="pdf-footer">⚽ Kircheim Nogomet — generirano so aplikacijata</p>
     </body></html>
   `);
   win.document.close();
   win.focus();
-  setTimeout(() => win.print(), 300);
+  setTimeout(() => win.print(), 400);
 }
 
 function clearSquad() {
