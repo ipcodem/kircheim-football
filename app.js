@@ -49,6 +49,11 @@ const LANGS = ["mk", "sr", "hr", "cnr", "ba", "de"];
 const DEFAULT_LANG = "mk";
 
 const I18N = {
+  brand_word: {
+    mk: "Фудбал",
+    sr: "Nogomet", hr: "Nogomet", ba: "Nogomet", cnr: "Nogomet",
+    de: "Nogomet",
+  },
   login_subtitle: {
     mk: "Внеси ја лозинката за тимот за да влезеш.",
     sr: "Unesi lozinku tima da bi ušao.",
@@ -337,7 +342,7 @@ const I18N = {
   csv_team_header: { mk: "Тим", sr: "Tim", hr: "Momčad", ba: "Momčad", cnr: "Tim", de: "Team" },
   csv_name_header: { mk: "Име", sr: "Ime", hr: "Ime", ba: "Ime", cnr: "Ime", de: "Name" },
   csv_role_header: { mk: "Улога", sr: "Uloga", hr: "Uloga", ba: "Uloga", cnr: "Uloga", de: "Rolle" },
-  pdf_title: { mk: "Kircheim Nogomet — Тимови", sr: "Kircheim Nogomet — Timovi", hr: "Kircheim Nogomet — Momčadi", ba: "Kircheim Nogomet — Momčadi", cnr: "Kircheim Nogomet — Timovi", de: "Kircheim Nogomet — Teams" },
+  pdf_title: { mk: "Kircheim Фудбал — Тимови", sr: "Kircheim Nogomet — Timovi", hr: "Kircheim Nogomet — Momčadi", ba: "Kircheim Nogomet — Momčadi", cnr: "Kircheim Nogomet — Timovi", de: "Kircheim Nogomet — Teams" },
   clear_squad_confirm: {
     mk: "Внеси админ лозинка за да го испразниш денешниот состав (без да се брише базата):",
     sr: "Unesi admin lozinku da isprazniš današnji sastav (bez brisanja baze):",
@@ -404,6 +409,7 @@ function applyStaticI18n() {
     el.placeholder = t(el.getAttribute("data-i18n-placeholder"));
   });
   document.documentElement.lang = currentLang() === "de" ? "de" : "mk";
+  document.title = `Kircheim ${t("brand_word")} — Team Picker`;
 }
 
 function setLanguage(lang) {
@@ -1574,12 +1580,12 @@ function exportPdf() {
     </style>
     </head><body>
       <div class="pdf-banner">
-        <h1>Kircheim <span>Nogomet</span></h1>
+        <h1>Kircheim <span>${t("brand_word")}</span></h1>
         <span class="pdf-date">${new Date().toLocaleDateString("mk-MK")}</span>
       </div>
       <div class="pdf-teams">${teamHtml}</div>
       ${matchHtml}
-      <p class="pdf-footer">⚽ Kircheim Nogomet — generirano so aplikacijata</p>
+      <p class="pdf-footer">⚽ Kircheim ${t("brand_word")} — generirano so aplikacijata</p>
     </body></html>
   `);
   win.document.close();
